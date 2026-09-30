@@ -1,7 +1,7 @@
 {
   "name": "thien-dao-bot",
-  "version": "1.0.0",
-  "description": "Bot Tu Tiên Discord - Thiên Đạo Bot",
+  "version": "2.0.0",
+  "description": "Thiên Đạo Bot - Hệ Thống Quản Lý Tu Tiên & Discord Server Toàn Năng",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
