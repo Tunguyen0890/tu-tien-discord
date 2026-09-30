@@ -8,8 +8,10 @@ const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
 });
 
-let db = JSON.parse(fs.readFileSync('./index.json', 'utf8'));
-const saveDB = () => fs.writeFileSync('./index.json', JSON.stringify(db, null, 2));
+// Xử lý Volume data trên Railway để không bị mất dữ liệu
+const dbPath = fs.existsSync('/app/data/index.json') ? '/app/data/index.json' : './index.json';
+let db = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+const saveDB = () => fs.writeFileSync(dbPath, JSON.stringify(db, null, 2));
 
 // Tính Lực Chiến (CP)
 function calculateCP(user) {
@@ -17,11 +19,24 @@ function calculateCP(user) {
     const realm = realmList[user.level] || realmList[realmList.length - 1];
     const physiqueObj = db.physiques.find(p => p.name === user.physique) || { multiplier: 1.0 };
     const baseCP = realm ? realm.base_cp : 100;
-    
-    return Math.floor((baseCP + (user.exp * 0.5)) * physiqueObj.multiplier);
+
+    let mountCP = 0;
+    if (user.mount) {
+        const m = db.mounts.find(x => x.id === user.mount);
+        if (m) mountCP = m.cp_bonus;
+    }
+
+    let petCP = 0;
+    if (user.pet) {
+        const p = db.pets.find(x => x.id === user.pet);
+        if (p) petCP = p.cp_bonus;
+    }
+
+    const partnerBonus = user.partner ? 1.1 : 1.0;
+    return Math.floor(((baseCP + (user.exp * 0.5)) * physiqueObj.multiplier + mountCP + petCP) * partnerBonus);
 }
 
-// Vẽ thanh tiến trình Dễ Nhìn Chuyên Nghiệp
+// Thanh tiến trình
 function drawProgressBar(current, max, length = 8) {
     if (max <= 0) return '🟩'.repeat(length);
     const progress = Math.min(Math.max(current / max, 0), 1);
@@ -29,7 +44,7 @@ function drawProgressBar(current, max, length = 8) {
     return '🟩'.repeat(fill) + '⬛'.repeat(length - fill);
 }
 
-// Tự động đột phá (Đến Max Cấp)
+// Tự động đột phá
 function checkAutoBreakthrough(userId, channel) {
     const user = db.users[userId];
     if (!user) return;
@@ -47,10 +62,9 @@ function checkAutoBreakthrough(userId, channel) {
             const embed = new EmbedBuilder()
                 .setTitle(isMax ? `👑 ĐẠT CẢNH GIỚI TỐI CAO!` : `⚡ TỰ ĐỘNG ĐỘT PHÁ CẢNH GIỚI!`)
                 .setDescription(
-                    `Chúc mừng **<@${userId}>** tu vi viên mãn, đột phá lên **${curRealm.icon}${curRealm.name}**!\n` +
-                    `⚔️ Lực chiến hiện tại: **${calculateCP(user).toLocaleString()} CP**`
+                    `Chúc mừng **<@${userId}>** đột phá lên **${curRealm.icon}${curRealm.name}**!\n` +
+                    `⚔️️ Lực chiến hiện tại: **${calculateCP(user).toLocaleString()} CP**`
                 )
-                .setImage(curRealm.gif)
                 .setColor(isMax ? 0xFFD700 : 0xF1C40F);
             channel.send({ embeds: [embed] }).catch(() => {});
         }
@@ -58,7 +72,7 @@ function checkAutoBreakthrough(userId, channel) {
     saveDB();
 }
 
-// Giao diện Tu Tiên Bắt Mắt
+// Bảng Điều Khiển
 function buildControlPanel(user, pData) {
     const realmList = db.realms[pData.system];
     const curRealm = realmList[pData.level] || realmList[realmList.length - 1];
@@ -66,19 +80,20 @@ function buildControlPanel(user, pData) {
     const isMaxLevel = pData.level >= realmList.length - 1;
 
     const expText = isMaxLevel ? '`[ĐẠT MAX CẤP]`' : `\`[${pData.exp.toLocaleString()}/${curRealm.exp_required.toLocaleString()}]\``;
-    const sysName = pData.system === 'XiuXian' ? 'Phàm Nhân Tu Tiên' : 'Đấu Phá Thương Khung';
+    const mountObj = db.mounts.find(m => m.id === pData.mount);
+    const petObj = db.pets.find(p => p.id === pData.pet);
 
     const embed = new EmbedBuilder()
         .setColor(0x2B2D31)
         .setAuthor({ name: `BẢNG ĐIỀU KHIỂN TU TIÊN - ${user.username}`, iconURL: user.displayAvatarURL() })
         .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 256 }))
-        .setImage("https://i.imgur.com/7A20sQL.png")
         .addFields(
             { 
                 name: '⚔️ THÔNG TIN TIÊN GIỚI', 
                 value: `**Cảnh Giới:** ${curRealm.icon}${curRealm.name}\n` +
                        `**Lực Chiến :** 💥 ${cp.toLocaleString()} CP\n` +
-                       `**Hệ Thống  :** ${sysName}`, 
+                       `**Đạo Lữ    :** ${pData.partner ? `<@${pData.partner}>` : 'Chưa có'}\n` +
+                       `**Tọa Kỵ    :** ${mountObj ? mountObj.name : 'Chưa có'} | **Linh Thú:** ${petObj ? petObj.name : 'Chưa có'}`, 
                 inline: false 
             },
             { 
@@ -93,7 +108,7 @@ function buildControlPanel(user, pData) {
                 inline: false 
             }
         )
-        .setFooter({ text: 'Hệ Thống Quản Lý Động Phủ • Tu Tiên Giới', iconURL: client.user.displayAvatarURL() });
+        .setFooter({ text: 'Hệ Thống Quản Lý Động Phủ • Tu Tiên Giới' });
 
     const row1 = new ActionRowBuilder().addComponents(
         new ButtonBuilder().setCustomId('ui_profile').setLabel('👤 Hồ Sơ').setStyle(ButtonStyle.Primary),
@@ -104,12 +119,12 @@ function buildControlPanel(user, pData) {
 
     const row2 = new ActionRowBuilder().addComponents(
         new ButtonBuilder().setCustomId('ui_lichluyen').setLabel('🧭 Lịch Luyện').setStyle(ButtonStyle.Success),
-        new ButtonBuilder().setCustomId('ui_bicanh').setLabel('🔮 Bí Cảnh').setStyle(ButtonStyle.Danger),
-        new ButtonBuilder().setCustomId('ui_nhiemvu').setLabel('📜 Nhiệm Vụ').setStyle(ButtonStyle.Secondary)
+        new ButtonBuilder().setCustomId('ui_songtu').setLabel('💖 Song Tu').setStyle(ButtonStyle.Danger),
+        new ButtonBuilder().setCustomId('ui_bicanh').setLabel('🔮 Bí Cảnh').setStyle(ButtonStyle.Secondary)
     );
 
     const row3 = new ActionRowBuilder().addComponents(
-        new ButtonBuilder().setCustomId('ui_hanhtrang').setLabel('🎒 Hành Trang').setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder().setCustomId('ui_toaky').setLabel('🐎 Tọa Kỵ / Pet').setStyle(ButtonStyle.Secondary),
         new ButtonBuilder().setCustomId('ui_cuahang').setLabel('🛒 Cửa Hàng').setStyle(ButtonStyle.Secondary),
         new ButtonBuilder().setCustomId('ui_dophuong').setLabel('🎲 Đổ Phường').setStyle(ButtonStyle.Secondary)
     );
@@ -117,66 +132,35 @@ function buildControlPanel(user, pData) {
     return { embeds: [embed], components: [row1, row2, row3] };
 }
 
-// Bảng Xếp Hạng Lực Chiến
-function buildLeaderboard() {
-    const userArray = Object.keys(db.users).map(id => {
-        const u = db.users[id];
-        const realmList = db.realms[u.system];
-        const curRealm = realmList[u.level] || realmList[realmList.length - 1];
-        return {
-            id: id,
-            cp: calculateCP(u),
-            realm: curRealm.name
-        };
-    });
-
-    userArray.sort((a, b) => b.cp - a.cp);
-    const top10 = userArray.slice(0, 10);
-
-    let desc = "";
-    top10.forEach((u, index) => {
-        const medal = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : `**#${index + 1}**`;
-        desc += `${medal} <@${u.id}>\n┗ 💥 Lực Chiến: **${u.cp.toLocaleString()} CP** | 🟢 \`${u.realm}\`\n\n`;
-    });
-
-    return new EmbedBuilder()
-        .setTitle('🏆 BẢNG XẾP HẠNG CAO THỦ TIÊN GIỚI')
-        .setColor(0xF1C40F)
-        .setDescription(desc || 'Chưa có cao thủ nào ghi danh!')
-        .setTimestamp();
-}
-
-// Đăng ký Slash Commands
+// Đăng ký Slash Commands (Bao gồm lệnh setchannel)
 const commands = [
-    new SlashCommandBuilder().setName('start').setDescription('Khởi tạo nhân vật Tu Tiên')
-        .addStringOption(o => o.setName('system').setDescription('Chọn hệ thống tu luyện').setRequired(true)
-            .addChoices(
-                { name: 'Phàm Nhân Tu Tiên (14 Cảnh Giới)', value: 'XiuXian' }, 
-                { name: 'Đấu Phá Thương Khung (12 Cảnh Giới)', value: 'DouQi' }
-            )),
-    new SlashCommandBuilder().setName('tutien').setDescription('Mở Bảng Điều Khiển Tu Tiên'),
-    new SlashCommandBuilder().setName('bxh').setDescription('Xem Bảng Xếp Hạng Lực Chiến Server'),
-    new SlashCommandBuilder().setName('setchannel').setDescription('Chỉ định kênh Tu Tiên (Admin)')
-        .addChannelOption(o => o.setName('channel').setDescription('Kênh tu tiên').setRequired(true))
+    new SlashCommandBuilder().setName('setchannel').setDescription('Chỉ định kênh duy nhất cho Bot hoạt động (Admin)')
+        .addChannelOption(o => o.setName('channel').setDescription('Chọn kênh Tu Tiên').setRequired(true))
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
-    new SlashCommandBuilder().setName('admin').setDescription('Lệnh Quản Trị Hệ Thống')
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-        .addSubcommand(s => s.setName('give').setDescription('Thêm tài nguyên')
-            .addUserOption(o => o.setName('user').setDescription('Người nhận').setRequired(true))
-            .addStringOption(o => o.setName('type').setDescription('Loại tài nguyên').setRequired(true)
-                .addChoices({ name: 'EXP', value: 'exp' }, { name: 'Nguyên Thạch', value: 'nguyen_thach' }, { name: 'Vàng', value: 'gold' }))
-            .addIntegerOption(o => o.setName('amount').setDescription('Số lượng').setRequired(true)))
+    new SlashCommandBuilder().setName('start').setDescription('Khởi tạo nhân vật Tu Tiên')
+        .addStringOption(o => o.setName('system').setDescription('Chọn hệ thống').setRequired(true)
+            .addChoices({ name: 'Phàm Nhân Tu Tiên', value: 'XiuXian' }, { name: 'Đấu Phá Thương Khung', value: 'DouQi' })),
+    new SlashCommandBuilder().setName('tutien').setDescription('Mở Bảng Điều Khiển Tu Tiên'),
+    new SlashCommandBuilder().setName('ketduyen').setDescription('Kết thành Đạo Lữ với người chơi khác')
+        .addUserOption(o => o.setName('user').setDescription('Đối tượng cầu hôn').setRequired(true)),
+    new SlashCommandBuilder().setName('tongmon').setDescription('Quản lý Tông Môn')
+        .addSubcommand(s => s.setName('tao').setDescription('Tạo Tông Môn mới (Cần 10,000 Nguyên Thạch)')
+            .addStringOption(o => o.setName('ten').setDescription('Tên Tông Môn').setRequired(true)))
+        .addSubcommand(s => s.setName('giatnhap').setDescription('Gia nhập Tông Môn')
+            .addStringOption(o => o.setName('ten').setDescription('Tên Tông Môn').setRequired(true)))
 ].map(c => c.toJSON());
 
 client.once('ready', async () => {
-    console.log(`⚡ Bot Tu Tiên Giới đã chạy thành công: ${client.user.tag}`);
+    console.log(`⚡ Bot Tu Tiên Giới đã khởi chạy: ${client.user.tag}`);
     const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
     await rest.put(Routes.applicationCommands(client.user.id), { body: commands });
 });
 
-// Chat nhận EXP + Thể Lực
+// Chat nhận EXP (Chỉ nhận tin nhắn trong kênh đã cài đặt)
 client.on('messageCreate', async (msg) => {
     if (msg.author.bot || !msg.guild) return;
+
+    // Kiểm tra kênh hoạt động
     if (db.config.channel_id && msg.channel.id !== db.config.channel_id) return;
 
     const uid = msg.author.id;
@@ -189,116 +173,137 @@ client.on('messageCreate', async (msg) => {
     }
 });
 
-// Handling Interactions
+// Xử lý Lệnh & Nút bấm
 client.on('interactionCreate', async (interaction) => {
     const uid = interaction.user.id;
+
+    // 1. Lệnh /setchannel cho Admin (Luôn dùng được ở mọi kênh để setup)
+    if (interaction.isChatInputCommand() && interaction.commandName === 'setchannel') {
+        const targetChannel = interaction.options.getChannel('channel');
+        db.config.channel_id = targetChannel.id;
+        saveDB();
+        return interaction.reply({ content: `✅ Đã giới hạn Bot Tu Tiên chỉ hoạt động tại kênh ${targetChannel}!`, flags: 64 });
+    }
+
+    // 2. Chặn các lệnh Slash khác nếu dùng sai kênh
+    if (db.config.channel_id && interaction.channelId !== db.config.channel_id) {
+        return interaction.reply({ 
+            content: `⛔ Bot Tu Tiên chỉ hoạt động tại kênh <#${db.config.channel_id}>! Vui lòng sang đó thực hiện.`, 
+            flags: 64 
+        });
+    }
 
     if (interaction.isChatInputCommand()) {
         const { commandName, options } = interaction;
 
-        if (commandName === 'setchannel') {
-            db.config.channel_id = options.getChannel('channel').id;
-            saveDB();
-            return interaction.reply({ content: `✅ Đã thiết lập kênh Tu Tiên tại ${options.getChannel('channel')}` });
-        }
-
         if (commandName === 'start') {
-            if (db.users[uid]) return interaction.reply({ content: '❌ Đạo hữu đã tạo nhân vật trước đó rồi!', flags: 64 });
+            if (db.users[uid]) return interaction.reply({ content: '❌ Bạn đã tạo nhân vật!', flags: 64 });
             const sys = options.getString('system');
             const randomPhysique = db.physiques[Math.floor(Math.random() * db.physiques.length)].name;
             const randomRoot = db.spiritual_roots[Math.floor(Math.random() * db.spiritual_roots.length)];
 
             db.users[uid] = {
-                system: sys, level: 0, exp: 0, nguyen_thach: 1000, gold: 50, energy: 100,
-                physique: randomPhysique, spiritual_root: randomRoot, afk_start: null,
-                inventory: []
+                system: sys, level: 0, exp: 0, nguyen_thach: 2000, gold: 50, energy: 100,
+                physique: randomPhysique, spiritual_root: randomRoot, mount: null, pet: null,
+                partner: null, guild: null, last_songtu: 0
             };
             saveDB();
-            return interaction.reply({ content: `✨ **Bước vào Tiên Lộ thành công!** Thể chất: **${randomPhysique}** | Linh căn: **${randomRoot}**. Gõ \`/tutien\` để mở giao diện.` });
-        }
-
-        if (commandName === 'bxh') {
-            return interaction.reply({ embeds: [buildLeaderboard()] });
+            return interaction.reply({ content: `✨ **Khởi tạo nhân vật thành công!** Thể chất: **${randomPhysique}** | Linh căn: **${randomRoot}**. Gõ \`/tutien\` để bắt đầu.` });
         }
 
         const pData = db.users[uid];
-        if (!pData && commandName !== 'admin') return interaction.reply({ content: '⚠️ Đạo hữu chưa tạo nhân vật! Hãy dùng `/start`.', flags: 64 });
+        if (!pData) return interaction.reply({ content: '⚠️ Bạn chưa tạo nhân vật! Gõ `/start`.', flags: 64 });
 
         if (commandName === 'tutien') {
             return interaction.reply(buildControlPanel(interaction.user, pData));
         }
 
-        if (commandName === 'admin') {
-            const sub = options.getSubcommand();
+        if (commandName === 'ketduyen') {
             const target = options.getUser('user');
-            if (!db.users[target.id]) return interaction.reply({ content: '❌ Người dùng này chưa khởi tạo nhân vật!', flags: 64 });
+            if (target.id === uid) return interaction.reply({ content: '❌ Không thể tự kết duyên với chính mình!', flags: 64 });
+            if (!db.users[target.id]) return interaction.reply({ content: '❌ Người này chưa tạo nhân vật!', flags: 64 });
+            if (pData.partner) return interaction.reply({ content: '❌ Bạn đã có Đạo Lữ rồi!', flags: 64 });
+            if (db.users[target.id].partner) return interaction.reply({ content: '❌ Đối phương đã có Đạo Lữ!', flags: 64 });
 
-            if (sub === 'give') {
-                const type = options.getString('type');
-                const amt = options.getInteger('amount');
-                db.users[target.id][type] += amt;
+            pData.partner = target.id;
+            db.users[target.id].partner = uid;
+            saveDB();
+
+            return interaction.reply({ content: `💖 Chúc mừng **<@${uid}>** và **<@${target.id}>** đã kết thành **Đạo Lữ**! (Tăng +10% Lực Chiến)` });
+        }
+
+        if (commandName === 'tongmon') {
+            const sub = options.getSubcommand();
+            if (sub === 'tao') {
+                const name = options.getString('ten');
+                if (pData.nguyen_thach < 10000) return interaction.reply({ content: '❌ Cần 10,000 Nguyên Thạch để lập Tông Môn!', flags: 64 });
+                if (db.guilds[name]) return interaction.reply({ content: '❌ Tên Tông Môn đã tồn tại!', flags: 64 });
+
+                pData.nguyen_thach -= 10000;
+                db.guilds[name] = { master: uid, members: [uid], level: 1 };
+                pData.guild = name;
                 saveDB();
-                await interaction.reply({ content: `✅ Đã ban thưởng **+${amt.toLocaleString()}${type}** cho <@${target.id}>!` });
-                if (type === 'exp') checkAutoBreakthrough(target.id, interaction.channel);
-                return;
+
+                return interaction.reply({ content: `🏛️ Chúc mừng bạn đã khai sơn lập phái, thành lập Tông Môn **${name}**!` });
+            }
+
+            if (sub === 'giatnhap') {
+                const name = options.getString('ten');
+                if (!db.guilds[name]) return interaction.reply({ content: '❌ Tông Môn không tồn tại!', flags: 64 });
+                if (pData.guild) return interaction.reply({ content: '❌ Bạn đã có Tông Môn rồi!', flags: 64 });
+
+                db.guilds[name].members.push(uid);
+                pData.guild = name;
+                saveDB();
+
+                return interaction.reply({ content: `🏛️ Bạn đã gia nhập Tông Môn **${name}**!` });
             }
         }
     }
 
+    // Xử lý tương tác Nút bấm (Buttons)
     if (interaction.isButton()) {
         const pData = db.users[uid];
-        if (!pData) return interaction.reply({ content: '⚠️ Bạn chưa khởi tạo nhân vật! Vui lòng dùng lệnh `/start`.', flags: 64 });
+        if (!pData) return interaction.reply({ content: '⚠️ Gõ `/start` để tạo nhân vật.', flags: 64 });
 
         const cid = interaction.customId;
 
-        if (cid === 'ui_bxh') {
-            return interaction.reply({ embeds: [buildLeaderboard()], flags: 64 });
+        if (cid === 'ui_songtu') {
+            if (!pData.partner) return interaction.reply({ content: '❌ Bạn chưa có Đạo Lữ! Dùng lệnh `/ketduyen` để kết duyên.', flags: 64 });
+            
+            const now = Date.now();
+            if (now - (pData.last_songtu || 0) < 14400000) {
+                return interaction.reply({ content: '⏳ Đạo Lữ đang hồi sức, cần chờ thêm để tiếp tục Song Tu!', flags: 64 });
+            }
+
+            pData.last_songtu = now;
+            const expAdd = 1500;
+            pData.exp += expAdd;
+            saveDB();
+            checkAutoBreakthrough(uid, interaction.channel);
+
+            await interaction.update(buildControlPanel(interaction.user, pData));
+            return interaction.followUp({ content: `💖 Bạn cùng Đạo Lữ <@${pData.partner}> Song Tu nhận **+${expAdd} EXP**!`, flags: 64 });
         }
 
-        if (cid === 'ui_profile') {
-            const realmList = db.realms[pData.system];
-            const curRealm = realmList[pData.level] || realmList[realmList.length - 1];
-            const embed = new EmbedBuilder()
-                .setTitle(`📜 HỒ SƠ CHI TIẾT - ${interaction.user.username}`)
-                .setColor(0x3498DB)
-                .addFields(
-                    { name: '💥 Lực Chiến', value: `\`${calculateCP(pData).toLocaleString()} CP\``, inline: true },
-                    { name: '🟢 Cảnh Giới', value: `\`${curRealm.name}\``, inline: true },
-                    { name: '🧬 Thể Chất', value: `\`${pData.physique}\``, inline: true },
-                    { name: '🌱 Linh Căn', value: `\`${pData.spiritual_root}\``, inline: true },
-                    { name: '💰 Nguyên Thạch', value: `\`${pData.nguyen_thach.toLocaleString()}\``, inline: true },
-                    { name: '🪙 Vàng', value: `\`${pData.gold.toLocaleString()}\``, inline: true }
-                );
-            return interaction.reply({ embeds: [embed], flags: 64 });
+        if (cid === 'ui_toaky') {
+            let msg = "🐎 **CỬA HÀNG TỌA KỴ & LINH THÚ**\n\n**Tọa Kỵ:**\n";
+            db.mounts.forEach(m => msg += `• **${m.name}** - Giá: \`${m.price} 💎\` (+${m.cp_bonus} CP)\n`);
+            msg += "\n**Linh Thú:**\n";
+            db.pets.forEach(p => msg += `• **${p.name}** - Giá: \`${p.price} 💎\` (+${p.cp_bonus} CP)\n`);
+            
+            return interaction.reply({ content: msg, flags: 64 });
         }
 
         if (cid === 'ui_lichluyen') {
-            if (pData.energy < 10) return interaction.reply({ content: '❌ Thể Lực không đủ (Cần 10 Thể Lực)!', flags: 64 });
+            if (pData.energy < 10) return interaction.reply({ content: '❌ Thể Lực không đủ!', flags: 64 });
             pData.energy -= 10;
             const expGain = Math.floor(Math.random() * 60) + 40;
             pData.exp += expGain;
             saveDB();
             checkAutoBreakthrough(uid, interaction.channel);
             await interaction.update(buildControlPanel(interaction.user, pData));
-            return interaction.followUp({ content: `🧭 Bạn đi lịch luyện trảm yêu trừ ma, thu hoạch được **+${expGain} EXP**!`, flags: 64 });
-        }
-
-        if (cid === 'ui_bicanh') {
-            if (pData.energy < 20) return interaction.reply({ content: '❌ Cần ít nhất 20 Thể Lực để thám hiểm Bí Cảnh!', flags: 64 });
-            pData.energy -= 20;
-            
-            const lucky = Math.random() > 0.35;
-            if (lucky) {
-                const stoneAdd = Math.floor(Math.random() * 400) + 150;
-                pData.nguyen_thach += stoneAdd;
-                saveDB();
-                await interaction.update(buildControlPanel(interaction.user, pData));
-                return interaction.followUp({ content: `🔮 **Vào Bí Cảnh tìm được cơ duyên!** Thu hoạch **+${stoneAdd} Nguyên Thạch**!`, flags: 64 });
-            } else {
-                saveDB();
-                await interaction.update(buildControlPanel(interaction.user, pData));
-                return interaction.followUp({ content: `💀 Bí Cảnh quá nguy hiểm, bạn đụng phải Cổ Bào Quái Thú đành rút lui (Mất 20 Thể Lực)!`, flags: 64 });
-            }
+            return interaction.followUp({ content: `🧭 Lịch luyện nhận **+${expGain} EXP**!`, flags: 64 });
         }
 
         if (cid === 'ui_dongphu') {
@@ -306,7 +311,7 @@ client.on('interactionCreate', async (interaction) => {
                 pData.afk_start = Date.now();
                 saveDB();
                 await interaction.update(buildControlPanel(interaction.user, pData));
-                return interaction.followUp({ content: '🧘 Bạn đã nhập định bế quan tại Động Phủ!', flags: 64 });
+                return interaction.followUp({ content: '🧘 Đã nhập định bế quan!', flags: 64 });
             } else {
                 const hours = Math.min((Date.now() - pData.afk_start) / 3600000, 24);
                 const expReward = Math.floor(hours * 1000);
@@ -319,30 +324,25 @@ client.on('interactionCreate', async (interaction) => {
                 checkAutoBreakthrough(uid, interaction.channel);
 
                 await interaction.update(buildControlPanel(interaction.user, pData));
-                return interaction.followUp({ content: `🔓 **Xuất Quan!** Bế quan \`${hours.toFixed(1)} giờ\` nhận: **+${expReward.toLocaleString()} EXP** & **+${stoneReward.toLocaleString()} 💎**`, flags: 64 });
+                return interaction.followUp({ content: `🔓 Xuất quan nhận: **+${expReward} EXP** & **+${stoneReward} 💎**`, flags: 64 });
             }
         }
 
-        if (cid === 'ui_cuahang') {
-            let shopList = "🛒 **CỬA HÀNG LINH DƯỢC & VẬT PHẨM**\n\n";
-            db.shop_items.forEach((item, index) => {
-                shopList += `**${index + 1}. ${item.name}** - Giá: \`${item.price} 💎\`\n┗ *${item.desc}*\n`;
-            });
-            return interaction.reply({ content: shopList, flags: 64 });
+        if (cid === 'ui_tongmon') {
+            if (!pData.guild) return interaction.reply({ content: '🏛️ Bạn chưa có Tông Môn! Dùng `/tongmon tao` hoặc `/tongmon giatnhap`.', flags: 64 });
+            const g = db.guilds[pData.guild];
+            return interaction.reply({ content: `🏛️ **TÔNG MÔN: ${pData.guild}**\n• Cấp độ: ${g.level}\n• Chưởng Môn: <@${g.master}>\n• Thành viên: ${g.members.length} người`, flags: 64 });
         }
 
+        if (cid === 'ui_cuahang') return interaction.reply({ content: '🛒 Dùng tính năng Tọa Kỵ / Pet hoặc Đổ Phường.', flags: 64 });
         if (cid === 'ui_dophuong') {
-            if (pData.nguyen_thach < 200) return interaction.reply({ content: '❌ Bạn cần tối thiểu 200 Nguyên Thạch!', flags: 64 });
+            if (pData.nguyen_thach < 200) return interaction.reply({ content: '❌ Cần 200 Nguyên Thạch!', flags: 64 });
             const win = Math.random() >= 0.5;
             pData.nguyen_thach += win ? 200 : -200;
             saveDB();
             await interaction.update(buildControlPanel(interaction.user, pData));
-            return interaction.followUp({ content: `🎲 Đổ Phường cược 200 Nguyên Thạch: Bạn **${win ? 'Thắng +200' : 'Thua -200'} 💎**!`, flags: 64 });
+            return interaction.followUp({ content: `🎲 Kết quả: Bạn **${win ? 'Thắng +200' : 'Thua -200'} 💎**!`, flags: 64 });
         }
-
-        if (cid === 'ui_tongmon') return interaction.reply({ content: '🏛️ **Tông Môn:** Tính năng lập Bang Phái Tông Môn sẽ sớm ra mắt!', flags: 64 });
-        if (cid === 'ui_nhiemvu') return interaction.reply({ content: '📜 **Nhiệm Vụ:** Đã điểm danh thành công hôm nay!', flags: 64 });
-        if (cid === 'ui_hanhtrang') return interaction.reply({ content: '🎒 **Hành Trang:** Bạn chưa sở hữu vật phẩm đặc biệt nào.', flags: 64 });
     }
 });
 
