@@ -5,30 +5,30 @@
   },
   "realms": {
     "XiuXian": [
-      { "id": 0, "name": "Luyện Khí Kỳ", "icon": "🟢", "exp_required": 100, "base_cp": 100, "base_hp": 500, "base_mp": 200, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHY5bTdqOGI2eXJuNHZ1Zmt1bmY1ZThqM3ZqOHpldmxwOHIybCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L1UrpHiAbYUs0/giphy.gif" },
-      { "id": 1, "name": "Trúc Cơ Kỳ", "icon": "🔵", "exp_required": 500, "base_cp": 500, "base_hp": 1200, "base_mp": 600, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYnJ2eHNxbXJtd3Juc2ZwbWFld3d2eTBnb2pzeWxsMnRoZXltOHdrMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7TKrEzvLbsVAud8I/giphy.gif" },
-      { "id": 2, "name": "Kết Đan Kỳ", "icon": "🟡", "exp_required": 2000, "base_cp": 2000, "base_hp": 3000, "base_mp": 1500, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdHNudGFsdmsyYzU0MmtwZjQzaHBvZTZsNXM5dGVidGFicnNhZW11OSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/d4aU235P2293S/giphy.gif" },
-      { "id": 3, "name": "Nguyên Anh Kỳ", "icon": "🟣", "exp_required": 8000, "base_cp": 6000, "base_hp": 8000, "base_mp": 4000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3ZtNWVnbnV2amMydmd0b2hwdmhycGcyNHZwNW4yYmx0NHJsdjRvbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/u01IOsk68xzC0/giphy.gif" },
-      { "id": 4, "name": "Hóa Thần Kỳ", "icon": "🔴", "exp_required": 25000, "base_cp": 18000, "base_hp": 20000, "base_mp": 10000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnE4bnkzYzNqOWhpMmcxbnhudXdqOTIxcWlxc2VlbnE4ZnNrbTJjdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l0HlQXkh1wx1RjtUA/giphy.gif" },
-      { "id": 5, "name": "Luyện Hư Kỳ", "icon": "💎", "exp_required": 70000, "base_cp": 50000, "base_hp": 50000, "base_mp": 25000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaGcxcnptbHQyOXlhcnlhMzhjOThnZjVycWRocTR0dmJocGlrcG1tOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/13i9MA8PmVZMzu/giphy.gif" },
-      { "id": 6, "name": "Hợp Thể Kỳ", "icon": "👑", "exp_required": 200000, "base_cp": 150000, "base_hp": 120000, "base_mp": 60000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3NldG4yeWkyd2tzZWU1ODltNWUwdjZudGttMXpmeW15dXk3Mm1wZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT1R17x6d44WjG3wA0/giphy.gif" },
-      { "id": 7, "name": "Đại Thừa Kỳ", "icon": "✨", "exp_required": 600000, "base_cp": 400000, "base_hp": 300000, "base_mp": 150000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExand6OTZsdnAxeTJzMnkxaThraXB1bzV5ZWNwbWRtMXo1Mm5lcmF5YyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o84sq21TxDH6PyYms/giphy.gif" },
-      { "id": 8, "name": "Độ Kiếp Kỳ", "icon": "⚡", "exp_required": 1500000, "base_cp": 1000000, "base_hp": 800000, "base_mp": 400000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNndicjM5Zm5xdG1udTFpMXNscmx1cjRyc29qcnVmcmlxdXpoanphbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l378A8Vp19oB80aY0/giphy.gif" },
-      { "id": 9, "name": "Chân Tiên", "icon": "🌌", "exp_required": 5000000, "base_cp": 3000000, "base_hp": 2000000, "base_mp": 1000000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXVuaGExaXRpcnplOGlsbWVsb3ByanA2dTZjcjZmcHF3Z3A4cXkyZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT39D7O9Xj1Jq171iU/giphy.gif" },
-      { "id": 10, "name": "Kim Tiên", "icon": "☯️", "exp_required": 15000000, "base_cp": 10000000, "base_hp": 6000000, "base_mp": 3000000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWdqaHZzaWltdHFsdzh6aDcycnVsdjVudW5rMjlvaXRkYXA5dzRxeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l1J9yTco50C62025O/giphy.gif" }
+      { "id": 0, "name": "Luyện Khí Kỳ - Tầng 1", "icon": "🟢", "exp_required": 100, "base_cp": 100, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHY5bTdqOGI2eXJuNHZ1Zmt1bmY1ZThqM3ZqOHpldmxwOHIybCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L1UrpHiAbYUs0/giphy.gif" },
+      { "id": 1, "name": "Trúc Cơ Sơ Kỳ", "icon": "🔵", "exp_required": 500, "base_cp": 500, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYnJ2eHNxbXJtd3Juc2ZwbWFld3d2eTBnb2pzeWxsMnRoZXltOHdrMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7TKrEzvLbsVAud8I/giphy.gif" },
+      { "id": 2, "name": "Kết Đan Kỳ - Trung Kỳ", "icon": "🟡", "exp_required": 2000, "base_cp": 2000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdHNudGFsdmsyYzU0MmtwZjQzaHBvZTZsNXM5dGVidGFicnNhZW11OSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/d4aU235P2293S/giphy.gif" },
+      { "id": 3, "name": "Nguyên Anh Kỳ - Viên Mãn", "icon": "🟣", "exp_required": 8000, "base_cp": 6000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3ZtNWVnbnV2amMydmd0b2hwdmhycGcyNHZwNW4yYmx0NHJsdjRvbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/u01IOsk68xzC0/giphy.gif" },
+      { "id": 4, "name": "Hóa Thần Kỳ", "icon": "🔴", "exp_required": 25000, "base_cp": 18000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnE4bnkzYzNqOWhpMmcxbnhudXdqOTIxcWlxc2VlbnE4ZnNrbTJjdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l0HlQXkh1wx1RjtUA/giphy.gif" },
+      { "id": 5, "name": "Luyện Hư Kỳ", "icon": "💎", "exp_required": 70000, "base_cp": 50000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaGcxcnptbHQyOXlhcnlhMzhjOThnZjVycWRocTR0dmJocGlrcG1tOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/13i9MA8PmVZMzu/giphy.gif" },
+      { "id": 6, "name": "Hợp Thể Kỳ", "icon": "👑", "exp_required": 200000, "base_cp": 150000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3NldG4yeWkyd2tzZWU1ODltNWUwdjZudGttMXpmeW15dXk3Mm1wZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT1R17x6d44WjG3wA0/giphy.gif" },
+      { "id": 7, "name": "Đại Thừa Kỳ", "icon": "✨", "exp_required": 600000, "base_cp": 400000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExand6OTZsdnAxeTJzMnkxaThraXB1bzV5ZWNwbWRtMXo1Mm5lcmF5YyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o84sq21TxDH6PyYms/giphy.gif" },
+      { "id": 8, "name": "Độ Kiếp Kỳ", "icon": "⚡", "exp_required": 1500000, "base_cp": 1000000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNndicjM5Zm5xdG1udTFpMXNscmx1cjRyc29qcnVmcmlxdXpoanphbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l378A8Vp19oB80aY0/giphy.gif" },
+      { "id": 9, "name": "Chân Tiên", "icon": "🌌", "exp_required": 5000000, "base_cp": 3000000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXVuaGExaXRpcnplOGlsbWVsb3ByanA2dTZjcjZmcHF3Z3A4cXkyZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT39D7O9Xj1Jq171iU/giphy.gif" },
+      { "id": 10, "name": "Kim Tiên", "icon": "☯️", "exp_required": 15000000, "base_cp": 10000000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWdqaHZzaWltdHFsdzh6aDcycnVsdjVudW5rMjlvaXRkYXA5dzRxeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l1J9yTco50C62025O/giphy.gif" }
     ],
     "DouQi": [
-      { "id": 0, "name": "Đấu Khí", "icon": "💨", "exp_required": 100, "base_cp": 100, "base_hp": 500, "base_mp": 200, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHY5bTdqOGI2eXJuNHZ1Zmt1bmY1ZThqM3ZqOHpldmxwOHIybCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L1UrpHiAbYUs0/giphy.gif" },
-      { "id": 1, "name": "Đấu Giả", "icon": "⚔️", "exp_required": 500, "base_cp": 500, "base_hp": 1200, "base_mp": 600, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYnJ2eHNxbXJtd3Juc2ZwbWFld3d2eTBnb2pzeWxsMnRoZXltOHdrMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7TKrEzvLbsVAud8I/giphy.gif" },
-      { "id": 2, "name": "Đấu Sư", "icon": "🛡️", "exp_required": 2000, "base_cp": 2000, "base_hp": 3000, "base_mp": 1500, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdHNudGFsdmsyYzU0MmtwZjQzaHBvZTZsNXM5dGVidGFicnNhZW11OSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/d4aU235P2293S/giphy.gif" },
-      { "id": 3, "name": "Đại Đấu Sư", "icon": "🗡️", "exp_required": 8000, "base_cp": 6000, "base_hp": 8000, "base_mp": 4000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3ZtNWVnbnV2amMydmd0b2hwdmhycGcyNHZwNW4yYmx0NHJsdjRvbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/u01IOsk68xzC0/giphy.gif" },
-      { "id": 4, "name": "Đấu Linh", "icon": "🔥", "exp_required": 25000, "base_cp": 18000, "base_hp": 20000, "base_mp": 10000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnE4bnkzYzNqOWhpMmcxbnhudXdqOTIxcWlxc2VlbnE4ZnNrbTJjdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l0HlQXkh1wx1RjtUA/giphy.gif" },
-      { "id": 5, "name": "Đấu Vương", "icon": "🦅", "exp_required": 70000, "base_cp": 50000, "base_hp": 50000, "base_mp": 25000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaGcxcnptbHQyOXlhcnlhMzhjOThnZjVycWRocTR0dmJocGlrcG1tOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/13i9MA8PmVZMzu/giphy.gif" },
-      { "id": 6, "name": "Đấu Hoàng", "icon": "👑", "exp_required": 200000, "base_cp": 150000, "base_hp": 120000, "base_mp": 60000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3NldG4yeWkyd2tzZWU1ODltNWUwdjZudGttMXpmeW15dXk3Mm1wZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT1R17x6d44WjG3wA0/giphy.gif" },
-      { "id": 7, "name": "Đấu Tông", "icon": "🌪️", "exp_required": 600000, "base_cp": 400000, "base_hp": 300000, "base_mp": 150000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExand6OTZsdnAxeTJzMnkxaThraXB1bzV5ZWNwbWRtMXo1Mm5lcmF5YyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o84sq21TxDH6PyYms/giphy.gif" },
-      { "id": 8, "name": "Đấu Tôn", "icon": "🌌", "exp_required": 1500000, "base_cp": 1000000, "base_hp": 800000, "base_mp": 400000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNndicjM5Zm5xdG1udTFpMXNscmx1cjRyc29qcnVmcmlxdXpoanphbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l378A8Vp19oB80aY0/giphy.gif" },
-      { "id": 9, "name": "Đấu Thánh", "icon": "🌟", "exp_required": 5000000, "base_cp": 3000000, "base_hp": 2000000, "base_mp": 1000000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXVuaGExaXRpcnplOGlsbWVsb3ByanA2dTZjcjZmcHF3Z3A4cXkyZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT39D7O9Xj1Jq171iU/giphy.gif" },
-      { "id": 10, "name": "Đấu Đế", "icon": "🐉", "exp_required": 15000000, "base_cp": 10000000, "base_hp": 6000000, "base_mp": 3000000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWdqaHZzaWltdHFsdzh6aDcycnVsdjVudW5rMjlvaXRkYXA5dzRxeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l1J9yTco50C62025O/giphy.gif" }
+      { "id": 0, "name": "Đấu Khí - Nhất Tinh", "icon": "💨", "exp_required": 100, "base_cp": 100, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHY5bTdqOGI2eXJuNHZ1Zmt1bmY1ZThqM3ZqOHpldmxwOHIybCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L1UrpHiAbYUs0/giphy.gif" },
+      { "id": 1, "name": "Đấu Giả - Cửu Tinh", "icon": "⚔️", "exp_required": 500, "base_cp": 500, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYnJ2eHNxbXJtd3Juc2ZwbWFld3d2eTBnb2pzeWxsMnRoZXltOHdrMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7TKrEzvLbsVAud8I/giphy.gif" },
+      { "id": 2, "name": "Đấu Sư Hậu Kỳ", "icon": "🛡️", "exp_required": 2000, "base_cp": 2000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdHNudGFsdmsyYzU0MmtwZjQzaHBvZTZsNXM5dGVidGFicnNhZW11OSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/d4aU235P2293S/giphy.gif" },
+      { "id": 3, "name": "Đại Đấu Sư", "icon": "🗡️", "exp_required": 8000, "base_cp": 6000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3ZtNWVnbnV2amMydmd0b2hwdmhycGcyNHZwNW4yYmx0NHJsdjRvbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/u01IOsk68xzC0/giphy.gif" },
+      { "id": 4, "name": "Đấu Linh", "icon": "🔥", "exp_required": 25000, "base_cp": 18000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnE4bnkzYzNqOWhpMmcxbnhudXdqOTIxcWlxc2VlbnE4ZnNrbTJjdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l0HlQXkh1wx1RjtUA/giphy.gif" },
+      { "id": 5, "name": "Đấu Vương", "icon": "🦅", "exp_required": 70000, "base_cp": 50000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaGcxcnptbHQyOXlhcnlhMzhjOThnZjVycWRocTR0dmJocGlrcG1tOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/13i9MA8PmVZMzu/giphy.gif" },
+      { "id": 6, "name": "Đấu Hoàng", "icon": "👑", "exp_required": 200000, "base_cp": 150000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3NldG4yeWkyd2tzZWU1ODltNWUwdjZudGttMXpmeW15dXk3Mm1wZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT1R17x6d44WjG3wA0/giphy.gif" },
+      { "id": 7, "name": "Đấu Tông", "icon": "🌪️", "exp_required": 600000, "base_cp": 400000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExand6OTZsdnAxeTJzMnkxaThraXB1bzV5ZWNwbWRtMXo1Mm5lcmF5YyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o84sq21TxDH6PyYms/giphy.gif" },
+      { "id": 8, "name": "Đấu Tôn", "icon": "🌌", "exp_required": 1500000, "base_cp": 1000000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNndicjM5Zm5xdG1udTFpMXNscmx1cjRyc29qcnVmcmlxdXpoanphbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l378A8Vp19oB80aY0/giphy.gif" },
+      { "id": 9, "name": "Đấu Thánh", "icon": "🌟", "exp_required": 5000000, "base_cp": 3000000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXVuaGExaXRpcnplOGlsbWVsb3ByanA2dTZjcjZmcHF3Z3A4cXkyZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT39D7O9Xj1Jq171iU/giphy.gif" },
+      { "id": 10, "name": "Đấu Đế", "icon": "🐉", "exp_required": 15000000, "base_cp": 10000000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWdqaHZzaWltdHFsdzh6aDcycnVsdjVudW5rMjlvaXRkYXA5dzRxeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l1J9yTco50C62025O/giphy.gif" }
     ]
   },
   "physiques": [
@@ -38,11 +38,17 @@
     { "name": "Chí Tôn Cốt", "bonus": 2.0 },
     { "name": "Tiên Thai Thái Cổ", "bonus": 3.0 }
   ],
-  "spiritual_roots": ["Tạp Linh Căn", "Biến Dị Lôi Linh Căn", "Biến Dị Băng Linh Căn", "Biến Dị Phong Linh Căn", "Thuần Dương Tiên Linh Căn"],
+  "spiritual_roots": [
+    "Ngũ Hành Tạp Linh Căn",
+    "Biến Dị Lôi Linh Căn",
+    "Biến Dị Băng Linh Căn",
+    "Biến Dị Phong Linh Căn",
+    "Thuần Dương Tiên Linh Căn"
+  ],
   "shop_items": {
     "normal": [
-      { "id": "dan_hoi_hp", "name": "Hồi Xuân Đan", "price_type": "nguyen_thach", "price": 200, "desc": "Hồi phục ngay 1,000 HP" },
-      { "id": "dan_dot_pha_1", "name": "Trúc Cơ Đan", "price_type": "nguyen_thach", "price": 1000, "desc": "+30% tỷ lệ đột phá thành công" }
+      { "id": "dan_hoi_hp", "name": "Hồi Xuân Đan", "price_type": "nguyen_thach", "price": 200, "desc": "Hồi phục ngay 1,000 Thể Lực" },
+      { "id": "dan_dot_pha_1", "name": "Trúc Cơ Đan", "price_type": "nguyen_thach", "price": 1000, "desc": "Đan dược hỗ trợ công lực" }
     ],
     "global": [
       { "id": "dan_tu_vi_cao_cap", "name": "Cửu Chuyển Càn Khôn Đan", "price_type": "gold", "price": 100, "desc": "Tăng ngay 50,000 EXP" },
