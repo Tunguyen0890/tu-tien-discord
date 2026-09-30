@@ -11,7 +11,7 @@ const client = new Client({
 let db = JSON.parse(fs.readFileSync('./index.json', 'utf8'));
 const saveDB = () => fs.writeFileSync('./index.json', JSON.stringify(db, null, 2));
 
-// Tính Lực Chiến (CP) chuẩn xác theo Cảnh giới + EXP + Thể chất
+// Tính Lực Chiến (CP)
 function calculateCP(user) {
     const realmList = db.realms[user.system];
     const realm = realmList[user.level] || realmList[realmList.length - 1];
@@ -29,7 +29,7 @@ function drawProgressBar(current, max, length = 8) {
     return '🟩'.repeat(fill) + '⬛'.repeat(length - fill);
 }
 
-// Tự động đột phá (Xử lý mượt đến Max Cấp)
+// Tự động đột phá (Đến Max Cấp)
 function checkAutoBreakthrough(userId, channel) {
     const user = db.users[userId];
     if (!user) return;
@@ -37,7 +37,6 @@ function checkAutoBreakthrough(userId, channel) {
     let realmList = db.realms[user.system];
     let curRealm = realmList[user.level];
 
-    // Lặp qua để tăng cấp nếu đủ EXP và chưa đạt Cảnh giới Tối cao
     while (curRealm && user.level < realmList.length - 1 && user.exp >= curRealm.exp_required) {
         user.exp -= curRealm.exp_required;
         user.level += 1;
@@ -59,7 +58,7 @@ function checkAutoBreakthrough(userId, channel) {
     saveDB();
 }
 
-// Giao diện Tu Tiên Bắt Mắt (Gọn đẹp, Bỏ Uyển Sư Muội)
+// Giao diện Tu Tiên Bắt Mắt
 function buildControlPanel(user, pData) {
     const realmList = db.realms[pData.system];
     const curRealm = realmList[pData.level] || realmList[realmList.length - 1];
@@ -67,6 +66,7 @@ function buildControlPanel(user, pData) {
     const isMaxLevel = pData.level >= realmList.length - 1;
 
     const expText = isMaxLevel ? '`[ĐẠT MAX CẤP]`' : `\`[${pData.exp.toLocaleString()}/${curRealm.exp_required.toLocaleString()}]\``;
+    const sysName = pData.system === 'XiuXian' ? 'Phàm Nhân Tu Tiên' : 'Đấu Phá Thương Khung';
 
     const embed = new EmbedBuilder()
         .setColor(0x2B2D31)
@@ -76,7 +76,9 @@ function buildControlPanel(user, pData) {
         .addFields(
             { 
                 name: '⚔️ THÔNG TIN TIÊN GIỚI', 
-                value: ````ansi\n\u001b[1;33mCảnh Giới:\u001b[0m ${curRealm.icon} ${curRealm.name}\n\u001b[1;31mLực Chiến :\u001b[0m 💥 ${cp.toLocaleString()} CP\n\u001b[1;36mHệ Thống  :\u001b[0m ${pData.system === 'XiuXian' ? 'Phàm Nhân Tu Tiên' : 'Đấu Phá Thương Khung'}\n````, 
+                value: `**Cảnh Giới:** ${curRealm.icon}${curRealm.name}\n` +
+                       `**Lực Chiến :** 💥 ${cp.toLocaleString()} CP\n` +
+                       `**Hệ Thống  :** ${sysName}`, 
                 inline: false 
             },
             { 
@@ -191,7 +193,6 @@ client.on('messageCreate', async (msg) => {
 client.on('interactionCreate', async (interaction) => {
     const uid = interaction.user.id;
 
-    // 1. Slash Commands
     if (interaction.isChatInputCommand()) {
         const { commandName, options } = interaction;
 
@@ -244,7 +245,6 @@ client.on('interactionCreate', async (interaction) => {
         }
     }
 
-    // 2. Interactive Buttons
     if (interaction.isButton()) {
         const pData = db.users[uid];
         if (!pData) return interaction.reply({ content: '⚠️ Bạn chưa khởi tạo nhân vật! Vui lòng dùng lệnh `/start`.', flags: 64 });
