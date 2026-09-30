@@ -1,0 +1,37 @@
+{
+  "config": {
+    "primary_currency": "💎 Nguyên Thạch",
+    "secondary_currency": "🪙 Vàng"
+  },
+  "realms": {
+    "XiuXian": [
+      { "id": 1, "name": "Luyện Khí Kỳ", "icon": "🟢", "exp_required": 100, "base_cp": 100, "base_hp": 500, "base_mp": 200, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjEx.../giphy.gif" },
+      { "id": 2, "name": "Trúc Cơ Kỳ", "icon": "🔵", "exp_required": 500, "base_cp": 500, "base_hp": 1200, "base_mp": 600, "gif": "https://media.giphy.com/media/.../giphy.gif" },
+      { "id": 3, "name": "Kết Đan Kỳ", "icon": "🟡", "exp_required": 2000, "base_cp": 2000, "base_hp": 3000, "base_mp": 1500, "gif": "https://media.giphy.com/media/.../giphy.gif" },
+      { "id": 4, "name": "Nguyên Anh Kỳ", "icon": "🟣", "exp_required": 8000, "base_cp": 6000, "base_hp": 8000, "base_mp": 4000, "gif": "https://media.giphy.com/media/.../giphy.gif" },
+      { "id": 5, "name": "Hóa Thần Kỳ", "icon": "🔴", "exp_required": 25000, "base_cp": 18000, "base_hp": 20000, "base_mp": 10000, "gif": "https://media.giphy.com/media/.../giphy.gif" },
+      { "id": 6, "name": "Luyện Hư Kỳ", "icon": "💎", "exp_required": 70000, "base_cp": 50000, "base_hp": 50000, "base_mp": 25000, "gif": "https://media.giphy.com/media/.../giphy.gif" },
+      { "id": 7, "name": "Hợp Thể Kỳ", "icon": "👑", "exp_required": 200000, "base_cp": 150000, "base_hp": 120000, "base_mp": 60000, "gif": "https://media.giphy.com/media/.../giphy.gif" },
+      { "id": 8, "name": "Đại Thừa Kỳ", "icon": "✨", "exp_required": 600000, "base_cp": 400000, "base_hp": 300000, "base_mp": 150000, "gif": "https://media.giphy.com/media/.../giphy.gif" },
+      { "id": 9, "name": "Độ Kiếp Kỳ", "icon": "⚡", "exp_required": 1500000, "base_cp": 1000000, "base_hp": 800000, "base_mp": 400000, "gif": "https://media.giphy.com/media/.../giphy.gif" },
+      { "id": 10, "name": "Chân Tiên", "icon": "🌌", "exp_required": 5000000, "base_cp": 3000000, "base_hp": 2000000, "base_mp": 1000000, "gif": "https://media.giphy.com/media/.../giphy.gif" },
+      { "id": 11, "name": "Kim Tiên", "icon": "☯️", "exp_required": 15000000, "base_cp": 10000000, "base_hp": 6000000, "base_mp": 3000000, "gif": "https://media.giphy.com/media/.../giphy.gif" }
+    ],
+    "DouQi": [
+      { "id": 1, "name": "Đấu Khí", "icon": "💨", "exp_required": 100, "base_cp": 100, "base_hp": 500, "base_mp": 200, "gif": "https://media.giphy.com/media/.../giphy.gif" },
+      { "id": 2, "name": "Đấu Giả", "icon": "⚔️", "exp_required": 500, "base_cp": 500, "base_hp": 1200, "base_mp": 600, "gif": "https://media.giphy.com/media/.../giphy.gif" },
+      { "id": 3, "name": "Đấu Sư", "icon": "🛡️", "exp_required": 2000, "base_cp": 2000, "base_hp": 3000, "base_mp": 1500, "gif": "https://media.giphy.com/media/.../giphy.gif" },
+      { "id": 4, "name": "Đại Đấu Sư", "icon": "🗡️", "exp_required": 8000, "base_cp": 6000, "base_hp": 8000, "base_mp": 4000, "gif": "https://media.giphy.com/media/.../giphy.gif" },
+      { "id": 5, "name": "Đấu Linh", "icon": "🔥", "exp_required": 25000, "base_cp": 18000, "base_hp": 20000, "base_mp": 10000, "gif": "https://media.giphy.com/media/.../giphy.gif" },
+      { "id": 6, "name": "Đấu Vương", "icon": "🦅", "exp_required": 70000, "base_cp": 50000, "base_hp": 50000, "base_mp": 25000, "gif": "https://media.giphy.com/media/.../giphy.gif" },
+      { "id": 7, "name": "Đấu Hoàng", "icon": "👑", "exp_required": 200000, "base_cp": 150000, "base_hp": 120000, "base_mp": 60000, "gif": "https://media.giphy.com/media/.../giphy.gif" },
+      { "id": 8, "name": "Đấu Tông", "icon": "🌪️", "exp_required": 600000, "base_cp": 400000, "base_hp": 300000, "base_mp": 150000, "gif": "https://media.giphy.com/media/.../giphy.gif" },
+      { "id": 9, "name": "Đấu Tôn", "icon": "🌌", "exp_required": 1500000, "base_cp": 1000000, "base_hp": 800000, "base_mp": 400000, "gif": "https://media.giphy.com/media/.../giphy.gif" },
+      { "id": 10, "name": "Đấu Thánh", "icon": "🌟", "exp_required": 5000000, "base_cp": 3000000, "base_hp": 2000000, "base_mp": 1000000, "gif": "https://media.giphy.com/media/.../giphy.gif" },
+      { "id": 11, "name": "Đấu Đế", "icon": "🐉", "exp_required": 15000000, "base_cp": 10000000, "base_hp": 6000000, "base_mp": 3000000, "gif": "https://media.giphy.com/media/.../giphy.gif" }
+    ]
+  },
+  "physiques": ["Phế Thể", "Hoang Cổ Thánh Thể", "Chí Tôn Cốt", "Tiên Thai", "Bá Thể"],
+  "spiritual_roots": ["Ngũ Hành Linh Căn", "Lôi Linh Căn", "Băng Linh Căn", "Phong Linh Căn", "Thiên Linh Căn"],
+  "users": {}
+}
