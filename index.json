@@ -4,34 +4,34 @@
   },
   "realms": {
     "XiuXian": [
-      { "id": 0, "name": "Luyện Khí Kỳ", "icon": "🟢", "exp_required": 100, "base_cp": 500, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHY5bTdqOGI2eXJuNHZ1Zmt1bmY1ZThqM3ZqOHpldmxwOHIybCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L1UrpHiAbYUs0/giphy.gif" },
-      { "id": 1, "name": "Trúc Cơ Kỳ", "icon": "🔵", "exp_required": 500, "base_cp": 2500, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYnJ2eHNxbXJtd3Juc2ZwbWFld3d2eTBnb2pzeWxsMnRoZXltOHdrMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7TKrEzvLbsVAud8I/giphy.gif" },
-      { "id": 2, "name": "Kết Đan Kỳ", "icon": "🟡", "exp_required": 2000, "base_cp": 10000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdHNudGFsdmsyYzU0MmtwZjQzaHBvZTZsNXM5dGVidGFicnNhZW11OSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/d4aU235P2293S/giphy.gif" },
-      { "id": 3, "name": "Nguyên Anh Kỳ", "icon": "🟣", "exp_required": 8000, "base_cp": 40000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3ZtNWVnbnV2amMydmd0b2hwdmhycGcyNHZwNW4yYmx0NHJsdjRvbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/u01IOsk68xzC0/giphy.gif" },
-      { "id": 4, "name": "Hóa Thần Kỳ", "icon": "🔴", "exp_required": 25000, "base_cp": 150000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnE4bnkzYzNqOWhpMmcxbnhudXdqOTIxcWlxc2VlbnE4ZnNrbTJjdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l0HlQXkh1wx1RjtUA/giphy.gif" },
-      { "id": 5, "name": "Luyện Hư Kỳ", "icon": "💎", "exp_required": 80000, "base_cp": 500000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaGcxcnptbHQyOXlhcnlhMzhjOThnZjVycWRocTR0dmJocGlrcG1tOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/13i9MA8PmVZMzu/giphy.gif" },
-      { "id": 6, "name": "Hợp Thể Kỳ", "icon": "👑", "exp_required": 250000, "base_cp": 1500000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3NldG4yeWkyd2tzZWU1ODltNWUwdjZudGttMXpmeW15dXk3Mm1wZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT1R17x6d44WjG3wA0/giphy.gif" },
-      { "id": 7, "name": "Đại Thừa Kỳ", "icon": "✨", "exp_required": 800000, "base_cp": 5000000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExand6OTZsdnAxeTJzMnkxaThraXB1bzV5ZWNwbWRtMXo1Mm5lcmF5YyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o84sq21TxDH6PyYms/giphy.gif" },
-      { "id": 8, "name": "Độ Kiếp Kỳ", "icon": "⚡", "exp_required": 2000000, "base_cp": 15000000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNndicjM5Zm5xdG1udTFpMXNscmx1cjRyc29qcnVmcmlxdXpoanphbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l378A8Vp19oB80aY0/giphy.gif" },
-      { "id": 9, "name": "Chân Tiên", "icon": "🌌", "exp_required": 5000000, "base_cp": 40000000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXVuaGExaXRpcnplOGlsbWVsb3ByanA2dTZjcjZmcHF3Z3A4cXkyZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT39D7O9Xj1Jq171iU/giphy.gif" },
-      { "id": 10, "name": "Kim Tiên", "icon": "☯️", "exp_required": 15000000, "base_cp": 100000000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWdqaHZzaWltdHFsdzh6aDcycnVsdjVudW5rMjlvaXRkYXA5dzRxeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l1J9yTco50C62025O/giphy.gif" },
-      { "id": 11, "name": "Thái Ất Ngọc Tiên", "icon": "🪐", "exp_required": 40000000, "base_cp": 300000000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHY5bTdqOGI2eXJuNHZ1Zmt1bmY1ZThqM3ZqOHpldmxwOHIybCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L1UrpHiAbYUs0/giphy.gif" },
-      { "id": 12, "name": "Đại La Cảnh", "icon": "🌟", "exp_required": 100000000, "base_cp": 800000000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYnJ2eHNxbXJtd3Juc2ZwbWFld3d2eTBnb2pzeWxsMnRoZXltOHdrMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7TKrEzvLbsVAud8I/giphy.gif" },
-      { "id": 13, "name": "Đạo Tổ (MAX)", "icon": "☀️", "exp_required": 999999999, "base_cp": 5000000000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdHNudGFsdmsyYzU0MmtwZjQzaHBvZTZsNXM5dGVidGFicnNhZW11OSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/d4aU235P2293S/giphy.gif" }
+      { "id": 0, "name": "Luyện Khí Kỳ", "icon": "🟢", "exp_required": 100, "base_cp": 500 },
+      { "id": 1, "name": "Trúc Cơ Kỳ", "icon": "🔵", "exp_required": 500, "base_cp": 2500 },
+      { "id": 2, "name": "Kết Đan Kỳ", "icon": "🟡", "exp_required": 2000, "base_cp": 10000 },
+      { "id": 3, "name": "Nguyên Anh Kỳ", "icon": "🟣", "exp_required": 8000, "base_cp": 40000 },
+      { "id": 4, "name": "Hóa Thần Kỳ", "icon": "🔴", "exp_required": 25000, "base_cp": 150000 },
+      { "id": 5, "name": "Luyện Hư Kỳ", "icon": "💎", "exp_required": 80000, "base_cp": 500000 },
+      { "id": 6, "name": "Hợp Thể Kỳ", "icon": "👑", "exp_required": 250000, "base_cp": 1500000 },
+      { "id": 7, "name": "Đại Thừa Kỳ", "icon": "✨", "exp_required": 800000, "base_cp": 5000000 },
+      { "id": 8, "name": "Độ Kiếp Kỳ", "icon": "⚡", "exp_required": 2000000, "base_cp": 15000000 },
+      { "id": 9, "name": "Chân Tiên", "icon": "🌌", "exp_required": 5000000, "base_cp": 40000000 },
+      { "id": 10, "name": "Kim Tiên", "icon": "☯️", "exp_required": 15000000, "base_cp": 100000000 },
+      { "id": 11, "name": "Thái Ất Ngọc Tiên", "icon": "🪐", "exp_required": 40000000, "base_cp": 300000000 },
+      { "id": 12, "name": "Đại La Cảnh", "icon": "🌟", "exp_required": 100000000, "base_cp": 800000000 },
+      { "id": 13, "name": "Đạo Tổ (MAX)", "icon": "☀️", "exp_required": 999999999, "base_cp": 5000000000 }
     ],
     "DouQi": [
-      { "id": 0, "name": "Đấu Khí", "icon": "💨", "exp_required": 100, "base_cp": 500, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHY5bTdqOGI2eXJuNHZ1Zmt1bmY1ZThqM3ZqOHpldmxwOHIybCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L1UrpHiAbYUs0/giphy.gif" },
-      { "id": 1, "name": "Đấu Giả", "icon": "⚔️", "exp_required": 500, "base_cp": 2500, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYnJ2eHNxbXJtd3Juc2ZwbWFld3d2eTBnb2pzeWxsMnRoZXltOHdrMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7TKrEzvLbsVAud8I/giphy.gif" },
-      { "id": 2, "name": "Đấu Sư", "icon": "🛡️", "exp_required": 2000, "base_cp": 10000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdHNudGFsdmsyYzU0MmtwZjQzaHBvZTZsNXM5dGVidGFicnNhZW11OSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/d4aU235P2293S/giphy.gif" },
-      { "id": 3, "name": "Đại Đấu Sư", "icon": "🗡️", "exp_required": 8000, "base_cp": 40000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3ZtNWVnbnV2amMydmd0b2hwdmhycGcyNHZwNW4yYmx0NHJsdjRvbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/u01IOsk68xzC0/giphy.gif" },
-      { "id": 4, "name": "Đấu Linh", "icon": "🔥", "exp_required": 25000, "base_cp": 150000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnE4bnkzYzNqOWhpMmcxbnhudXdqOTIxcWlxc2VlbnE4ZnNrbTJjdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l0HlQXkh1wx1RjtUA/giphy.gif" },
-      { "id": 5, "name": "Đấu Vương", "icon": "🦅", "exp_required": 80000, "base_cp": 500000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaGcxcnptbHQyOXlhcnlhMzhjOThnZjVycWRocTR0dmJocGlrcG1tOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/13i9MA8PmVZMzu/giphy.gif" },
-      { "id": 6, "name": "Đấu Hoàng", "icon": "👑", "exp_required": 250000, "base_cp": 1500000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3NldG4yeWkyd2tzZWU1ODltNWUwdjZudGttMXpmeW15dXk3Mm1wZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT1R17x6d44WjG3wA0/giphy.gif" },
-      { "id": 7, "name": "Đấu Tông", "icon": "🌪️", "exp_required": 800000, "base_cp": 5000000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExand6OTZsdnAxeTJzMnkxaThraXB1bzV5ZWNwbWRtMXo1Mm5lcmF5YyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o84sq21TxDH6PyYms/giphy.gif" },
-      { "id": 8, "name": "Đấu Tôn", "icon": "🌌", "exp_required": 2000000, "base_cp": 15000000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNndicjM5Zm5xdG1udTFpMXNscmx1cjRyc29qcnVmcmlxdXpoanphbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l378A8Vp19oB80aY0/giphy.gif" },
-      { "id": 9, "name": "Đấu Thánh", "icon": "🌟", "exp_required": 5000000, "base_cp": 40000000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXVuaGExaXRpcnplOGlsbWVsb3ByanA2dTZjcjZmcHF3Z3A4cXkyZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT39D7O9Xj1Jq171iU/giphy.gif" },
-      { "id": 10, "name": "Đấu Đế", "icon": "🐉", "exp_required": 15000000, "base_cp": 100000000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWdqaHZzaWltdHFsdzh6aDcycnVsdjVudW5rMjlvaXRkYXA5dzRxeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l1J9yTco50C62025O/giphy.gif" },
-      { "id": 11, "name": "Chúa Tể Cảnh (MAX)", "icon": "🔱", "exp_required": 999999999, "base_cp": 5000000000, "gif": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHY5bTdqOGI2eXJuNHZ1Zmt1bmY1ZThqM3ZqOHpldmxwOHIybCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L1UrpHiAbYUs0/giphy.gif" }
+      { "id": 0, "name": "Đấu Khí", "icon": "💨", "exp_required": 100, "base_cp": 500 },
+      { "id": 1, "name": "Đấu Giả", "icon": "⚔️", "exp_required": 500, "base_cp": 2500 },
+      { "id": 2, "name": "Đấu Sư", "icon": "🛡️", "exp_required": 2000, "base_cp": 10000 },
+      { "id": 3, "name": "Đại Đấu Sư", "icon": "🗡️", "exp_required": 8000, "base_cp": 40000 },
+      { "id": 4, "name": "Đấu Linh", "icon": "🔥", "exp_required": 25000, "base_cp": 150000 },
+      { "id": 5, "name": "Đấu Vương", "icon": "🦅", "exp_required": 80000, "base_cp": 500000 },
+      { "id": 6, "name": "Đấu Hoàng", "icon": "👑", "exp_required": 250000, "base_cp": 1500000 },
+      { "id": 7, "name": "Đấu Tông", "icon": "🌪️", "exp_required": 800000, "base_cp": 5000000 },
+      { "id": 8, "name": "Đấu Tôn", "icon": "🌌", "exp_required": 2000000, "base_cp": 15000000 },
+      { "id": 9, "name": "Đấu Thánh", "icon": "🌟", "exp_required": 5000000, "base_cp": 40000000 },
+      { "id": 10, "name": "Đấu Đế", "icon": "🐉", "exp_required": 15000000, "base_cp": 100000000 },
+      { "id": 11, "name": "Chúa Tể Cảnh (MAX)", "icon": "🔱", "exp_required": 999999999, "base_cp": 5000000000 }
     ]
   },
   "physiques": [
@@ -41,9 +41,16 @@
     { "name": "Chí Tôn Cốt", "multiplier": 2.0 }
   ],
   "spiritual_roots": ["Tạp Linh Căn", "Lôi Linh Căn", "Băng Linh Căn", "Thuần Dương Tiên Căn"],
-  "shop_items": [
-    { "id": "dan_hp", "name": "💊 Hồi Xuân Đan", "price": 200, "desc": "+100 Thể Lực" },
-    { "id": "dan_exp", "name": "📜 Ngũ Hành Đan", "price": 500, "desc": "+1,000 EXP" }
+  "mounts": [
+    { "id": "m1", "name": "🐎 Linh Mã", "price": 1000, "cp_bonus": 2000 },
+    { "id": "m2", "name": "🐅 Xích Tinh Hổ", "price": 5000, "cp_bonus": 12000 },
+    { "id": "m3", "name": "🐉 Thái Cổ Thần Long", "price": 20000, "cp_bonus": 50000 }
   ],
+  "pets": [
+    { "id": "p1", "name": "🦊 Hồ Ly Tuyết", "price": 1500, "cp_bonus": 3000 },
+    { "id": "p2", "name": "🦅 Kim Sí Đại Bàng", "price": 6000, "cp_bonus": 15000 },
+    { "id": "p3", "name": "麒 Kỳ Lân Thượng Cổ", "price": 25000, "cp_bonus": 60000 }
+  ],
+  "guilds": {},
   "users": {}
 }
