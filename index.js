@@ -8,7 +8,7 @@ const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
 });
 
-// Xử lý Volume data trên Railway để không bị mất dữ liệu
+// Đường dẫn lưu data
 const dbPath = fs.existsSync('/app/data/index.json') ? '/app/data/index.json' : './index.json';
 let db = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
 const saveDB = () => fs.writeFileSync(dbPath, JSON.stringify(db, null, 2));
@@ -63,7 +63,7 @@ function checkAutoBreakthrough(userId, channel) {
                 .setTitle(isMax ? `👑 ĐẠT CẢNH GIỚI TỐI CAO!` : `⚡ TỰ ĐỘNG ĐỘT PHÁ CẢNH GIỚI!`)
                 .setDescription(
                     `Chúc mừng **<@${userId}>** đột phá lên **${curRealm.icon}${curRealm.name}**!\n` +
-                    `⚔️️ Lực chiến hiện tại: **${calculateCP(user).toLocaleString()} CP**`
+                    `⚔️ Lực chiến hiện tại: **${calculateCP(user).toLocaleString()} CP**`
                 )
                 .setColor(isMax ? 0xFFD700 : 0xF1C40F);
             channel.send({ embeds: [embed] }).catch(() => {});
@@ -132,11 +132,28 @@ function buildControlPanel(user, pData) {
     return { embeds: [embed], components: [row1, row2, row3] };
 }
 
-// Đăng ký Slash Commands (Bao gồm lệnh setchannel)
+// Đăng ký Slash Commands
 const commands = [
-    new SlashCommandBuilder().setName('setchannel').setDescription('Chỉ định kênh duy nhất cho Bot hoạt động (Admin)')
+    new SlashCommandBuilder().setName('setchannel').setDescription('Chỉ định kênh hoạt động (Admin)')
         .addChannelOption(o => o.setName('channel').setDescription('Chọn kênh Tu Tiên').setRequired(true))
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+    
+    // LỆNH ADMIN BUFF DATA
+    new SlashCommandBuilder().setName('adminbuff').setDescription('Buff/Trừ tài nguyên hoặc level cho đạo hữu (Admin)')
+        .addUserOption(o => o.setName('user').setDescription('Người chơi').setRequired(true))
+        .addStringOption(o => o.setName('loai').setDescription('Loại buff').setRequired(true)
+            .addChoices(
+                { name: '💎 Nguyên Thạch', value: 'nguyen_thach' },
+                { name: '✨ EXP Tu Vi', value: 'exp' },
+                { name: '⚡ Level Cảnh Giới', value: 'level' }
+            ))
+        .addIntegerOption(o => o.setName('soluong').setDescription('Số lượng muốn cộng (hoặc trừ)').setRequired(true))
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+
+    // LỆNH MUA TỌA KỴ / PET
+    new SlashCommandBuilder().setName('mua').setDescription('Mua Tọa Kỵ hoặc Linh Thú bằng ID')
+        .addStringOption(o => o.setName('id').setDescription('Nhập ID mặt hàng (Ví dụ: m1, m2, p1, p2)').setRequired(true)),
+
     new SlashCommandBuilder().setName('start').setDescription('Khởi tạo nhân vật Tu Tiên')
         .addStringOption(o => o.setName('system').setDescription('Chọn hệ thống').setRequired(true)
             .addChoices({ name: 'Phàm Nhân Tu Tiên', value: 'XiuXian' }, { name: 'Đấu Phá Thương Khung', value: 'DouQi' })),
@@ -156,11 +173,9 @@ client.once('ready', async () => {
     await rest.put(Routes.applicationCommands(client.user.id), { body: commands });
 });
 
-// Chat nhận EXP (Chỉ nhận tin nhắn trong kênh đã cài đặt)
+// Chat nhận EXP
 client.on('messageCreate', async (msg) => {
     if (msg.author.bot || !msg.guild) return;
-
-    // Kiểm tra kênh hoạt động
     if (db.config.channel_id && msg.channel.id !== db.config.channel_id) return;
 
     const uid = msg.author.id;
@@ -173,11 +188,11 @@ client.on('messageCreate', async (msg) => {
     }
 });
 
-// Xử lý Lệnh & Nút bấm
+// Xử lý Interaction
 client.on('interactionCreate', async (interaction) => {
     const uid = interaction.user.id;
 
-    // 1. Lệnh /setchannel cho Admin (Luôn dùng được ở mọi kênh để setup)
+    // Lệnh SetChannel
     if (interaction.isChatInputCommand() && interaction.commandName === 'setchannel') {
         const targetChannel = interaction.options.getChannel('channel');
         db.config.channel_id = targetChannel.id;
@@ -185,7 +200,7 @@ client.on('interactionCreate', async (interaction) => {
         return interaction.reply({ content: `✅ Đã giới hạn Bot Tu Tiên chỉ hoạt động tại kênh ${targetChannel}!`, flags: 64 });
     }
 
-    // 2. Chặn các lệnh Slash khác nếu dùng sai kênh
+    // Kiểm tra kênh giới hạn
     if (db.config.channel_id && interaction.channelId !== db.config.channel_id) {
         return interaction.reply({ 
             content: `⛔ Bot Tu Tiên chỉ hoạt động tại kênh <#${db.config.channel_id}>! Vui lòng sang đó thực hiện.`, 
@@ -195,6 +210,54 @@ client.on('interactionCreate', async (interaction) => {
 
     if (interaction.isChatInputCommand()) {
         const { commandName, options } = interaction;
+
+        // XỬ LÝ LỆNH ADMIN BUFF
+        if (commandName === 'adminbuff') {
+            const targetUser = options.getUser('user');
+            const type = options.getString('loai');
+            const amount = options.getInteger('soluong');
+
+            if (!db.users[targetUser.id]) {
+                return interaction.reply({ content: '❌ Người dùng này chưa khởi tạo nhân vật!', flags: 64 });
+            }
+
+            db.users[targetUser.id][type] += amount;
+            if (db.users[targetUser.id][type] < 0) db.users[targetUser.id][type] = 0; // Tránh âm tiền/cấp
+
+            saveDB();
+            if (type === 'exp') checkAutoBreakthrough(targetUser.id, interaction.channel);
+
+            return interaction.reply({ 
+                content: `🛠️ **[ADMIN BUFF]** Đã điều chỉnh **${type}** của <@${targetUser.id}> thêm **${amount > 0 ? '+' + amount : amount}**!`,
+                flags: 64 
+            });
+        }
+
+        // XỬ LÝ LỆNH MUA TỌA KỴ / PET
+        if (commandName === 'mua') {
+            const pData = db.users[uid];
+            if (!pData) return interaction.reply({ content: '⚠️ Bạn chưa tạo nhân vật! Gõ `/start`.', flags: 64 });
+
+            const itemID = options.getString('id').toLowerCase();
+            const mount = db.mounts.find(m => m.id === itemID);
+            const pet = db.pets.find(p => p.id === itemID);
+
+            if (!mount && !pet) {
+                return interaction.reply({ content: '❌ ID vật phẩm không tồn tại! Bấm nút "Tọa Kỵ / Pet" để xem danh sách ID.', flags: 64 });
+            }
+
+            const item = mount || pet;
+            if (pData.nguyen_thach < item.price) {
+                return interaction.reply({ content: `❌ Bạn không đủ Nguyên Thạch! Cần **${item.price} 💎** nhưng hiện có **${pData.nguyen_thach} 💎**.`, flags: 64 });
+            }
+
+            pData.nguyen_thach -= item.price;
+            if (mount) pData.mount = mount.id;
+            if (pet) pData.pet = pet.id;
+
+            saveDB();
+            return interaction.reply({ content: `🎉 Bạn đã mua thành công **${item.name}**! Lực chiến tăng thêm **+${item.cp_bonus} CP**.` });
+        }
 
         if (commandName === 'start') {
             if (db.users[uid]) return interaction.reply({ content: '❌ Bạn đã tạo nhân vật!', flags: 64 });
@@ -229,7 +292,7 @@ client.on('interactionCreate', async (interaction) => {
             db.users[target.id].partner = uid;
             saveDB();
 
-            return interaction.reply({ content: `💖 Chúc mừng **<@${uid}>** và **<@${target.id}>** đã kết thành **Đạo Lữ**! (Tăng +10% Lực Chiến)` });
+            return interaction.reply({ content: `💖 Chúc mừng **<@${uid}>** và **<@${target.id}>** đã kết thành **Đạo Lữ**!` });
         }
 
         if (commandName === 'tongmon') {
@@ -261,12 +324,22 @@ client.on('interactionCreate', async (interaction) => {
         }
     }
 
-    // Xử lý tương tác Nút bấm (Buttons)
+    // Xử lý nút bấm
     if (interaction.isButton()) {
         const pData = db.users[uid];
         if (!pData) return interaction.reply({ content: '⚠️ Gõ `/start` để tạo nhân vật.', flags: 64 });
 
         const cid = interaction.customId;
+
+        // Xem cửa hàng Tọa kỵ & Pet (Hiển thị rõ ID để mua)
+        if (cid === 'ui_toaky') {
+            let msg = "🐎 **CỬA HÀNG TỌA KỴ & LINH THÚ**\n*(Dùng lệnh `/mua [ID]` để sở hữu)*\n\n**Tọa Kỵ:**\n";
+            db.mounts.forEach(m => msg += `• ID: \`${m.id}\` | **${m.name}** - Giá: \`${m.price} 💎\` (+${m.cp_bonus} CP)\n`);
+            msg += "\n**Linh Thú:**\n";
+            db.pets.forEach(p => msg += `• ID: \`${p.id}\` | **${p.name}** - Giá: \`${p.price} 💎\` (+${p.cp_bonus} CP)\n`);
+            
+            return interaction.reply({ content: msg, flags: 64 });
+        }
 
         if (cid === 'ui_songtu') {
             if (!pData.partner) return interaction.reply({ content: '❌ Bạn chưa có Đạo Lữ! Dùng lệnh `/ketduyen` để kết duyên.', flags: 64 });
@@ -284,15 +357,6 @@ client.on('interactionCreate', async (interaction) => {
 
             await interaction.update(buildControlPanel(interaction.user, pData));
             return interaction.followUp({ content: `💖 Bạn cùng Đạo Lữ <@${pData.partner}> Song Tu nhận **+${expAdd} EXP**!`, flags: 64 });
-        }
-
-        if (cid === 'ui_toaky') {
-            let msg = "🐎 **CỬA HÀNG TỌA KỴ & LINH THÚ**\n\n**Tọa Kỵ:**\n";
-            db.mounts.forEach(m => msg += `• **${m.name}** - Giá: \`${m.price} 💎\` (+${m.cp_bonus} CP)\n`);
-            msg += "\n**Linh Thú:**\n";
-            db.pets.forEach(p => msg += `• **${p.name}** - Giá: \`${p.price} 💎\` (+${p.cp_bonus} CP)\n`);
-            
-            return interaction.reply({ content: msg, flags: 64 });
         }
 
         if (cid === 'ui_lichluyen') {
@@ -334,7 +398,7 @@ client.on('interactionCreate', async (interaction) => {
             return interaction.reply({ content: `🏛️ **TÔNG MÔN: ${pData.guild}**\n• Cấp độ: ${g.level}\n• Chưởng Môn: <@${g.master}>\n• Thành viên: ${g.members.length} người`, flags: 64 });
         }
 
-        if (cid === 'ui_cuahang') return interaction.reply({ content: '🛒 Dùng tính năng Tọa Kỵ / Pet hoặc Đổ Phường.', flags: 64 });
+        if (cid === 'ui_cuahang') return interaction.reply({ content: '🛒 Bấm nút "Tọa Kỵ / Pet" để xem danh sách và dùng `/mua [ID]` để mua đồ.', flags: 64 });
         if (cid === 'ui_dophuong') {
             if (pData.nguyen_thach < 200) return interaction.reply({ content: '❌ Cần 200 Nguyên Thạch!', flags: 64 });
             const win = Math.random() >= 0.5;
