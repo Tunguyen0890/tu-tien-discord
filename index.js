@@ -12,8 +12,9 @@ const {
 } = require('discord.js');
 const fs = require('fs');
 
-const TOKEN = 'YOUR_BOT_TOKEN_HERE';
-const CLIENT_ID = 'YOUR_CLIENT_ID_HERE';
+// Đọc Token và Client ID từ Variables trên Railway
+const TOKEN = process.env.DISCORD_TOKEN;
+const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const DATA_FILE = './data.json';
@@ -23,11 +24,32 @@ function saveData() {
   fs.writeFileSync(DATA_FILE, JSON.stringify(db, null, 2));
 }
 
-// ------------------- DỮ LIỆU CẤU HÌNH -------------------
+// ------------------- DỮ LIỆU CẤU HÌNH CẢNH GIỚI (3 CẤP / ĐẠI CẢNH GIỚI) -------------------
 const CANH_GIOI = [
-  'Luyện Khí Sơ Kỳ', 'Luyện Khí Hậu Kỳ', 'Trúc Cơ Sơ Kỳ', 'Trúc Cơ Hậu Kỳ',
-  'Kết Đan Sơ Kỳ', 'Kết Đan Hậu Kỳ', 'Nguyên Anh Sơ Kỳ', 'Nguyên Anh Hậu Kỳ',
-  'Hóa Thần Sơ Kỳ', 'Hóa Thần Hậu Kỳ', 'Luyện Hư', 'Hợp Thể', 'Đại Thừa', 'Độ Kiếp Thành Tiên'
+  // Luyện Khí
+  'Luyện Khí Sơ Kỳ', 'Luyện Khí Trung Kỳ', 'Luyện Khí Hậu Kỳ',
+  // Trúc Cơ
+  'Trúc Cơ Sơ Kỳ', 'Trúc Cơ Trung Kỳ', 'Trúc Cơ Hậu Kỳ',
+  // Kết Đan / Kim Đan
+  'Kết Đan Sơ Kỳ', 'Kết Đan Trung Kỳ', 'Kết Đan Hậu Kỳ',
+  // Nguyên Anh
+  'Nguyên Anh Sơ Kỳ', 'Nguyên Anh Trung Kỳ', 'Nguyên Anh Hậu Kỳ',
+  // Hóa Thần
+  'Hóa Thần Sơ Kỳ', 'Hóa Thần Trung Kỳ', 'Hóa Thần Hậu Kỳ',
+  // Luyện Hư
+  'Luyện Hư Sơ Kỳ', 'Luyện Hư Trung Kỳ', 'Luyện Hư Hậu Kỳ',
+  // Hợp Thể
+  'Hợp Thể Sơ Kỳ', 'Hợp Thể Trung Kỳ', 'Hợp Thể Hậu Kỳ',
+  // Đại Thừa
+  'Đại Thừa Sơ Kỳ', 'Đại Thừa Trung Kỳ', 'Đại Thừa Hậu Kỳ',
+  // Độ Kiếp & Tiên Giới
+  'Độ Kiếp Kỳ', 'Chân Tiên', 'Kim Tiên', 'Thái Ất Ngọc Tiên', 'Đại La Kim Tiên', 'Đạo Tổ'
+];
+
+const LEVELUP_GIFS = [
+  'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Z2dG9xaXRybnhvYjM3d21ubjJsdnAzeGRqcnY5Y3ByaHRrZjFnYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L5aX0K9jJRm8w/giphy.gif',
+  'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaG9wOXM1czd4bmhxdjI0czdydHR2czZrdWZreTF4bzZid2l1OGI5NCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ul1omBLfJ330Y/giphy.gif',
+  'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWVpZG9udXdzZnp5OG56dTBmYThxeG1yd3A3MWxjdmt1c3RzbnI0eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/G3w5bFkW3ijIs/giphy.gif'
 ];
 
 const LINH_CAN_LIST = [
@@ -45,21 +67,13 @@ const PET_LIST = [
   { name: '啼魂兽 - Đề Hồn Thú', cong: 3000, price: 12000 },
   { name: '墨蛟 - Mặc Giao', cong: 2000, price: 8000 },
   { name: '九尾天狐 - Cửu Vĩ Thiên Hồ', cong: 4500, price: 20000 },
-  { name: '冰凤 - Băng Phượng', cong: 5000, price: 25000 },
-  { name: '太灵清犀 - Thái Linh Thanh Tây', cong: 1800, price: 7000 },
-  { name: '六翼霜蝉 - Lục Dực Sương Thiền', cong: 3500, price: 15000 },
-  { name: '金毛吼 - Kim Mao Hống', cong: 2800, price: 10000 }
+  { name: '冰凤 - Băng Phượng', cong: 5000, price: 25000 }
 ];
 
 const TOA_KY_LIST = [
   { name: 'Thánh Mạn Ngưu', lucChien: 1000, price: 3000 },
   { name: 'Thanh Phong Độc Giác Thú', lucChien: 2500, price: 8000 },
-  { name: 'Hỗn Độn Càn Khôn Đạo Thú', lucChien: 10000, price: 50000 },
-  { name: 'Kim Xỉ Long Mộc Chu', lucChien: 4000, price: 15000 },
-  { name: 'Xích Viêm Hỏa Kỳ Lân', lucChien: 8000, price: 35000 },
-  { name: 'Tuyết Vũ Ngân Đao Sư', lucChien: 3000, price: 10000 },
-  { name: 'Thâm Hải Băng Long', lucChien: 12000, price: 60000 },
-  { name: 'Cửu U Triệu Hán Thú', lucChien: 6000, price: 25000 }
+  { name: 'Hỗn Độn Càn Khôn Đạo Thú', lucChien: 10000, price: 50000 }
 ];
 
 // ------------------- HÀM BỔ TRỢ -------------------
@@ -140,6 +154,17 @@ function createProfileEmbed(user, player) {
     .setFooter({ text: 'Phàm Nhân Tu Tiên Bot' });
 }
 
+function createLevelUpEmbed(user, player) {
+  return new EmbedBuilder()
+    .setColor('#FFD700')
+    .setTitle('⚡ CHÚC MỪNG ĐỘT PHÁ CẢNH GIỚI! ⚡')
+    .setDescription(`🎉 Thiên Địa Biến Động! Đạo hữu **${player.daoHieu}** đã cảm ngộ thiên đạo, đột phá lên **${CANH_GIOI[player.canhGioiIndex]}**!\n\n` +
+      `⚔️ Công kích: **+300**\n🛡️ Phòng ngự: **+150**\n❤️ Sinh mệnh tối đa: **+1,000**`)
+    .setThumbnail(user.displayAvatarURL({ dynamic: true }))
+    .setImage(getRandom(LEVELUP_GIFS))
+    .setFooter({ text: 'Danh Chấn Thiên Hạ - Phàm Nhân Tu Tiên' });
+}
+
 function createMainMenuButtons() {
   const row1 = new ActionRowBuilder().addComponents(
     new ButtonBuilder().setCustomId('btn_hoso').setLabel('👤 Hồ Sơ').setStyle(ButtonStyle.Primary),
@@ -157,7 +182,7 @@ function createMainMenuButtons() {
   return [row1, row2];
 }
 
-// ------------------- REGISTRATION COMMANDS -------------------
+// ------------------- KÍCH HOẠT & ĐĂNG KÝ SLASH COMMANDS -------------------
 const commands = [
   new SlashCommandBuilder().setName('tutien').setDescription('Mở Bảng Tu Tiên'),
   new SlashCommandBuilder().setName('pk').setDescription('Thách đấu PK với tu sĩ khác')
@@ -169,26 +194,33 @@ const commands = [
   new SlashCommandBuilder().setName('bangxephang').setDescription('Xem Bảng Xếp Hạng Tu Sĩ'),
   
   // Admin Commands
-  new SlashCommandBuilder().setName('admin_tuvi').setDescription('[Admin] Tăng/Giảm Tu vi')
+  new SlashCommandBuilder().setName('admin_tuvi').setDescription('[Admin] Ban thưởng / Giảm Tu Vi')
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addUserOption(o => o.setName('target').setDescription('Tu sĩ').setRequired(true))
     .addIntegerOption(o => o.setName('amount').setDescription('Số tu vi (+/-)').setRequired(true)),
-  new SlashCommandBuilder().setName('admin_nguyenthach').setDescription('[Admin] Tăng/Giảm Nguyên Thạch')
+  new SlashCommandBuilder().setName('admin_nguyenthach').setDescription('[Admin] Ban thưởng / Giảm Nguyên Thạch')
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addUserOption(o => o.setName('target').setDescription('Tu sĩ').setRequired(true))
     .addIntegerOption(o => o.setName('amount').setDescription('Số Nguyên thạch (+/-)').setRequired(true))
 ];
 
-const rest = new REST({ version: '10' }).setToken(TOKEN);
-(async () => {
+async function registerCommands() {
+  if (!TOKEN || !CLIENT_ID) {
+    console.error("❌ THIẾU DISCORD_TOKEN HOẶC DISCORD_CLIENT_ID TRONG VARIABLES!");
+    return;
+  }
+  const rest = new REST({ version: '10' }).setToken(TOKEN);
   try {
+    console.log('🔄 Đang đăng ký Slash Commands...');
     await rest.put(Routes.applicationCommands(CLIENT_ID), { body: commands });
-    console.log('Lệnh Slash đã được đăng ký!');
-  } catch (err) { console.error(err); }
-})();
+    console.log('✅ Đã đăng ký lệnh thành công!');
+  } catch (err) { 
+    console.error('❌ Lỗi đăng ký Slash Commands:', err); 
+  }
+}
 
 // ------------------- EVENT HANDLERS -------------------
-client.on('ready', () => console.log(`Bot Tu Tiên ${client.user.tag} sẵn sàng!`));
+client.on('ready', () => console.log(`🤖 Bot Tu Tiên [${client.user.tag}] đã hoạt động!`));
 
 client.on('interactionCreate', async interaction => {
   if (interaction.isChatInputCommand()) {
@@ -200,7 +232,6 @@ client.on('interactionCreate', async interaction => {
       await interaction.reply({ embeds: [embed], components: createMainMenuButtons() });
     }
 
-    // PK Hệ Thống
     else if (commandName === 'pk') {
       const targetUser = options.getUser('target');
       if (targetUser.id === user.id) return interaction.reply({ content: 'Không thể tự PK chính mình!', ephemeral: true });
@@ -209,7 +240,6 @@ client.on('interactionCreate', async interaction => {
       const p1Power = getLucChien(player);
       const p2Power = getLucChien(targetPlayer);
 
-      // Tỷ lệ may mắn crit
       let p1Bonus = Math.random() < (player.baoKich / 100) ? 1.25 : 1.0;
       let p2Bonus = Math.random() < (targetPlayer.baoKich / 100) ? 1.25 : 1.0;
 
@@ -238,7 +268,6 @@ client.on('interactionCreate', async interaction => {
       await interaction.reply({ embeds: [pkEmbed] });
     }
 
-    // Đạo Lữ
     else if (commandName === 'ketduyen') {
       const targetUser = options.getUser('target');
       if (targetUser.id === user.id) return interaction.reply({ content: 'Không thể kết duyên với chính mình!', ephemeral: true });
@@ -251,10 +280,10 @@ client.on('interactionCreate', async interaction => {
       await interaction.reply({ content: `🎉 Chúc mừng **${player.daoHieu}** và **${targetPlayer.daoHieu}** đã chính thức kết thành **Đạo Lữ**, cùng nhau sóng đôi trên con đường trường sinh!` });
     }
 
-    // Tạo Tông Môn
     else if (commandName === 'createtongmon') {
       const name = options.getString('name');
-      if (player.canhGioiIndex < 6) { // Nguyên Anh
+      // Nguyên Anh Sơ Kỳ nằm ở index 9 trong mảng CANH_GIOI mới
+      if (player.canhGioiIndex < 9) {
         return interaction.reply({ content: '❌ Bạn phải đạt cảnh giới **Nguyên Anh** trở lên mới có thể khai sơn lập môn!', ephemeral: true });
       }
       if (player.nguyenThach < 50000) {
@@ -267,7 +296,6 @@ client.on('interactionCreate', async interaction => {
       await interaction.reply({ content: `🏰 Chúc mừng Tông Chủ **${player.daoHieu}** đã khai sáng tông môn **${name}** vang danh thiên hạ!` });
     }
 
-    // Bảng Xếp Hạng
     else if (commandName === 'bangxephang') {
       const sorted = Object.values(db).sort((a, b) => getLucChien(b) - getLucChien(a)).slice(0, 10);
       let list = sorted.map((p, i) => `${i + 1}. **${p.daoHieu}** - ${CANH_GIOI[p.canhGioiIndex]} | ⚔️ ${getLucChien(p).toLocaleString()} LC`).join('\n');
@@ -279,7 +307,7 @@ client.on('interactionCreate', async interaction => {
       await interaction.reply({ embeds: [bxhEmbed] });
     }
 
-    // Admin Tools
+    // Admin Commands
     else if (commandName === 'admin_tuvi') {
       const targetUser = options.getUser('target');
       const amount = options.getInteger('amount');
@@ -287,8 +315,13 @@ client.on('interactionCreate', async interaction => {
 
       targetPlayer.tuVi += amount;
       saveData();
-      await interaction.reply({ content: `✅ Đã điều chỉnh Tu Vi của **${targetPlayer.daoHieu}**: ${amount > 0 ? '+' : ''}${amount}`, ephemeral: true });
+
+      const actionText = amount >= 0 ? `ban thưởng **+${amount.toLocaleString()} Tu Vi**` : `tước đi **${Math.abs(amount).toLocaleString()} Tu Vi**`;
+      await interaction.reply({ 
+        content: `🌌 **Thiên đạo ban thưởng!** Thiên đạo đã ${actionText} cho tu sĩ **${targetPlayer.daoHieu}**!` 
+      });
     }
+    
     else if (commandName === 'admin_nguyenthach') {
       const targetUser = options.getUser('target');
       const amount = options.getInteger('amount');
@@ -296,11 +329,14 @@ client.on('interactionCreate', async interaction => {
 
       targetPlayer.nguyenThach += amount;
       saveData();
-      await interaction.reply({ content: `✅ Đã điều chỉnh Nguyên Thạch của **${targetPlayer.daoHieu}**: ${amount > 0 ? '+' : ''}${amount}`, ephemeral: true });
+
+      const actionText = amount >= 0 ? `ban thưởng **+${amount.toLocaleString()} Nguyên Thạch**` : `tước đi **${Math.abs(amount).toLocaleString()} Nguyên Thạch**`;
+      await interaction.reply({ 
+        content: `🌌 **Thiên đạo ban thưởng!** Thiên đạo đã ${actionText} cho tu sĩ **${targetPlayer.daoHieu}**!` 
+      });
     }
   }
 
-  // Button Interactions
   else if (interaction.isButton()) {
     const { customId, user } = interaction;
     const player = getPlayerData(user.id, user.username);
@@ -316,14 +352,15 @@ client.on('interactionCreate', async interaction => {
       player.theLuc -= 10;
       player.tuVi += 100;
       
-      // Kiểm tra đột phá
-      if (player.tuVi >= (player.canhGioiIndex + 1) * 500 && player.canhGioiIndex < CANH_GIOI.length - 1) {
+      if (player.tuVi >= (player.canhGioiIndex + 1) * 300 && player.canhGioiIndex < CANH_GIOI.length - 1) {
         player.canhGioiIndex += 1;
-        player.congKich += 300;
-        player.phongNgu += 150;
-        player.maxSinhMenh += 1000;
+        player.congKich += 150;
+        player.phongNgu += 80;
+        player.maxSinhMenh += 500;
         saveData();
-        await interaction.reply({ content: `🎉 **ĐỘT PHÁ!** Bạn đã thành công tiến thăng **${CANH_GIOI[player.canhGioiIndex]}**!` });
+
+        const levelEmbed = createLevelUpEmbed(user, player);
+        await interaction.reply({ embeds: [levelEmbed] });
       } else {
         saveData();
         await interaction.reply({ content: `🧘 Bế quan tu luyện, tốn 10 Thể Lực. Thu nhận **100 Tu Vi**!`, ephemeral: true });
@@ -342,8 +379,20 @@ client.on('interactionCreate', async interaction => {
       if (player.nguyenThach < 1000) return interaction.reply({ content: '❌ Không đủ Nguyên Thạch!', ephemeral: true });
       player.nguyenThach -= 1000;
       player.tuVi += 300;
-      saveData();
-      await interaction.reply({ content: `✅ Dùng 1,000 NT mua Cửu Chuyển Dẫn Linh Đan, tăng **300 Tu Vi**!`, ephemeral: true });
+      
+      if (player.tuVi >= (player.canhGioiIndex + 1) * 300 && player.canhGioiIndex < CANH_GIOI.length - 1) {
+        player.canhGioiIndex += 1;
+        player.congKich += 150;
+        player.phongNgu += 80;
+        player.maxSinhMenh += 500;
+        saveData();
+
+        const levelEmbed = createLevelUpEmbed(user, player);
+        await interaction.reply({ embeds: [levelEmbed] });
+      } else {
+        saveData();
+        await interaction.reply({ content: `✅ Dùng 1,000 NT mua Cửu Chuyển Dẫn Linh Đan, tăng **300 Tu Vi**!`, ephemeral: true });
+      }
     }
 
     else if (customId === 'buy_dan_theluc') {
@@ -374,4 +423,12 @@ client.on('interactionCreate', async interaction => {
   }
 });
 
-client.login(TOKEN);
+// Chạy Bot
+if (TOKEN) {
+  registerCommands();
+  client.login(TOKEN).catch(err => {
+    console.error("❌ Không thể kết nối Discord API. Lỗi Token:", err.message);
+  });
+} else {
+  console.error("❌ Vui lòng cung cấp DISCORD_TOKEN trong Variables trên Railway!");
+}
