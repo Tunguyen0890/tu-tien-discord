@@ -15,8 +15,8 @@ const client = new Client({
   ],
 });
 
-// TOKEN BOT DISCORD CỦA BẠN
-const TOKEN = 'YOUR_BOT_TOKEN_HERE';
+// THAY TOKEN BOT CỦA BẠN VÀO ĐÂY (Hoặc dùng process.env.DISCORD_TOKEN trên Railway)
+const TOKEN = process.env.DISCORD_TOKEN || 'YOUR_BOT_TOKEN_HERE';
 
 // Lưu trữ trạng thái bàn chơi theo Channel ID
 const games = new Map();
@@ -151,7 +151,6 @@ client.on('interactionCreate', async (interaction) => {
       }
     }
 
-    // Kiểm tra Xì Bàn / Xì Dách sớm
     updateGameUI(interaction, game, `🎲 **Game bắt đầu!**\nĐang tới lượt của: ${game.players[game.currentIndex].user}`);
   }
 
@@ -164,7 +163,6 @@ client.on('interactionCreate', async (interaction) => {
     const handInfo = calculateHand(currentPlayer.hand);
 
     if (handInfo.type === 'QUAC' || currentPlayer.hand.length === 5) {
-      // Tự động dằn/dừng nếu quắc hoặc đủ 5 lá (Ngũ linh)
       nextTurn(interaction, game);
     } else {
       updateGameUI(interaction, game, `🃏 ${user} vừa rút thêm 1 lá.`);
@@ -191,7 +189,6 @@ client.on('interactionCreate', async (interaction) => {
 function nextTurn(interaction, game) {
   game.currentIndex++;
 
-  // Nếu đã qua lượt người cuối cùng -> Kết thúc game & So điểm
   if (game.currentIndex >= game.players.length) {
     endGame(interaction, game);
   } else {
@@ -212,14 +209,12 @@ async function updateGameUI(interaction, game, statusMessage) {
   const dealer = game.players[0];
   const dealerInfo = calculateHand(dealer.hand);
   
-  // Ẩn 1 lá của Nhà Cái khi các nhà con đang chơi
   const isDealerTurn = game.currentIndex === 0;
   embed.addFields({
     name: `👑 Nhà Cái: ${dealer.user.username}`,
     value: isDealerTurn ? `Bài: ${formatHand(dealer.hand)} (${dealerInfo.score}đ)` : `Bài: ${formatHand(dealer.hand, true)}`,
   });
 
-  // Hiển thị các nhà con
   for (let i = 1; i < game.players.length; i++) {
     const p = game.players[i];
     const info = calculateHand(p.hand);
@@ -262,13 +257,11 @@ async function endGame(interaction, game) {
       value: `Bài: ${formatHand(dealer.hand)} | Điểm: ${dealerInfo.score} (${dealerInfo.type})`
     });
 
-  // So sánh bài từng Nhà Con với Nhà Cái
   for (let i = 1; i < game.players.length; i++) {
     const p = game.players[i];
     const pInfo = calculateHand(p.hand);
     let result = '';
 
-    // Logic xét thắng/thua luật Xì Lát VN
     if (pInfo.type === 'XI_BAN' && dealerInfo.type !== 'XI_BAN') result = '🎉 **THẮNG** (Xì Bàn)';
     else if (dealerInfo.type === 'XI_BAN' && pInfo.type !== 'XI_BAN') result = '❌ **THUA** (Cái Xì Bàn)';
     else if (pInfo.type === 'XI_DACH' && dealerInfo.type !== 'XI_DACH') result = '🎉 **THẮNG** (Xì Dách)';
@@ -277,4 +270,26 @@ async function endGame(interaction, game) {
     else if (dealerInfo.type === 'NGU_LINH') result = '❌ **THUA** (Cái Ngũ Linh)';
     else if (pInfo.type === 'QUAC' && dealerInfo.type === 'QUAC') result = '🤝 **HÒA** (Cùng Quắc)';
     else if (pInfo.type === 'QUAC') result = '❌ **THUA** (Quắc)';
-    else
+    else if (dealerInfo.type === 'QUAC') result = '🎉 **THẮNG** (Cái Quắc)';
+    else if (pInfo.score > dealerInfo.score) result = '🎉 **THẮNG**';
+    else if (pInfo.score < dealerInfo.score) result = '❌ **THUA**';
+    else result = '🤝 **HÒA**';
+
+    embed.addFields({
+      name: `Nhà con: ${p.user.username}`,
+      value: `Bài: ${formatHand(p.hand)} (${pInfo.score}đ) ➔ ${result}`,
+      inline: false
+    });
+  }
+
+  games.delete(interaction.channelId);
+  await interaction.update({ embeds: [embed], components: [] });
+}
+
+// Bắt sự kiện Bot đăng nhập thành công
+client.once('ready', () => {
+  console.log(`🤖 Bot online với tên: ${client.user.tag}`);
+});
+
+// Đăng nhập bot
+client.login(TOKEN);
