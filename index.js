@@ -1,364 +1,280 @@
 const { 
   Client, 
   GatewayIntentBits, 
-  EmbedBuilder, 
   ActionRowBuilder, 
   ButtonBuilder, 
   ButtonStyle, 
-  SlashCommandBuilder, 
-  REST, 
-  Routes,
-  PermissionFlagsBits
+  EmbedBuilder 
 } = require('discord.js');
-const fs = require('fs');
 
-const TOKEN = process.env.DISCORD_TOKEN;
-const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
-
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-const DATA_FILE = './data.json';
-let db = fs.existsSync(DATA_FILE) ? JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')) : {};
-
-function saveData() {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(db, null, 2));
-}
-
-// ------------------- CẤU HÌNH CẢNH GIỚI & THUỘC TÍNH -------------------
-const CANH_GIOI_BASE = [
-  'Luyện Khí', 'Trúc Cơ', 'Kết Đan', 'Nguyên Anh', 'Hóa Thần', 
-  'Luyện Hư', 'Hợp Thể', 'Đại Thừa', 'Độ Kiếp', 'Chân Tiên', 'Kim Tiên', 'Thái Ất Ngọc Tiên', 'Đạo Tổ'
-];
-
-// Kho GIF thăng cấp phong phú đa dạng hiệu ứng
-const LEVELUP_GIFS = [
-  'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Z2dG9xaXRybnhvYjM3d21ubjJsdnAzeGRqcnY5Y3ByaHRrZjFnYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L5aX0K9jJRm8w/giphy.gif',
-  'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaG9wOXM1czd4bmhxdjI0czdydHR2czZrdWZreTF4bzZid2l1OGI5NCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ul1omBLfJ330Y/giphy.gif',
-  'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWVpZG9udXdzZnp5OG56dTBmYThxeG1yd3A3MWxjdmt1c3RzbnI0eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/G3w5bFkW3ijIs/giphy.gif',
-  'https://media1.tenor.com/m/fJ6xL4HkFscAAAAC/anime-power.gif',
-  'https://media1.tenor.com/m/4Y9qC5_yO58AAAAC/dragon-ball-super.gif',
-  'https://media1.tenor.com/m/WqK4p_E14JMAAAAC/solo-leveling.gif',
-  'https://media.tenor.com/g_m-y92xVCEAAAAC/dbz-aura.gif',
-  'https://media.tenor.com/o2KxKq8C-qEAAAAC/goku-power-up.gif',
-  'https://media.tenor.com/9C44H-dCg-8AAAAC/super-saiyan.gif',
-  'https://media.tenor.com/uR2B5fM4-qYAAAAC/anime-aura.gif'
-];
-
-function getRandom(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function renderProgressBar(current, max, length = 8) {
-  const percentage = Math.max(0, Math.min(1, current / max));
-  const filled = Math.round(length * percentage);
-  const empty = length - filled;
-  return `[${'█'.repeat(filled)}${'░'.repeat(empty)}]`;
-}
-
-// Lấy tên cảnh giới chuẩn
-function getCanhGioiString(levelIndex) {
-  const baseIdx = Math.floor(levelIndex / 9);
-  const subIdx = levelIndex % 9;
-  const baseName = CANH_GIOI_BASE[Math.min(baseIdx, CANH_GIOI_BASE.length - 1)];
-  
-  let stage = 'Sơ Kỳ';
-  if (subIdx >= 3 && subIdx < 6) stage = 'Trung Kỳ';
-  else if (subIdx >= 6) stage = 'Hậu Kỳ';
-
-  const tangMap = ['Nhất Tầng', 'Nhị Tầng', 'Tam Tầng', 'Tứ Tầng', 'Ngũ Tầng', 'Lục Tầng', 'Thất Tầng', 'Bát Tầng', 'Cửu Tầng'];
-  return `⚪ **${baseName} ${stage} -${tangMap[subIdx]}**`;
-}
-
-// Khởi tạo và đồng bộ dữ liệu người chơi
-function getPlayerData(userId, username) {
-  if (!db[userId]) db[userId] = {};
-  
-  db[userId].daoHieu = db[userId].daoHieu || username;
-  db[userId].gioiTinh = db[userId].gioiTinh || 'Chưa đặt';
-  db[userId].danhHieu = db[userId].danhHieu || 'Tu Tiên Giả';
-  db[userId].gioiVuc = db[userId].gioiVuc || 'Nhân Giới';
-  
-  db[userId].canhGioiIndex = db[userId].canhGioiIndex ?? 2;
-  db[userId].tuVi = db[userId].tuVi ?? 0;
-  db[userId].tienLuc = db[userId].tienLuc ?? 2155;
-  
-  db[userId].theLuc = db[userId].theLuc ?? 300;
-  db[userId].maxTheLuc = db[userId].maxTheLuc ?? 300;
-  db[userId].sinhMenh = db[userId].sinhMenh ?? 575;
-  db[userId].maxSinhMenh = db[userId].maxSinhMenh ?? 575;
-  db[userId].linhLuc = db[userId].linhLuc ?? 25;
-  db[userId].maxLinhLuc = db[userId].maxLinhLuc ?? 200;
-  
-  db[userId].congKich = db[userId].congKich ?? 75;
-  db[userId].phongNgu = db[userId].phongNgu ?? 50;
-  db[userId].tocDo = db[userId].tocDo ?? 34;
-  db[userId].baoKich = db[userId].baoKich ?? 80;
-  db[userId].neTranh = db[userId].neTranh ?? 100;
-  
-  db[userId].linhCan = db[userId].linhCan || 'Kim';
-  db[userId].theChat = db[userId].theChat || 'Phàm Nhân Chi Khu';
-  db[userId].tongMon = db[userId].tongMon || 'Chưa có';
-  db[userId].nguyenThach = db[userId].nguyenThach ?? 1000;
-
-  saveData();
-  return db[userId];
-}
-
-function getRequiredExp(levelIndex) {
-  return (levelIndex + 1) * 200;
-}
-
-// TỰ ĐỘNG ĐỘT PHÁ CẢNH GIỚI
-function checkAndAutoLevelUp(player) {
-  let leveledUp = false;
-  let reqExp = getRequiredExp(player.canhGioiIndex);
-  
-  while (player.tuVi >= reqExp) {
-    player.tuVi -= reqExp;
-    player.canhGioiIndex += 1;
-    player.congKich += 15;
-    player.phongNgu += 10;
-    player.maxSinhMenh += 50;
-    player.sinhMenh = player.maxSinhMenh;
-    player.tienLuc += 250;
-    leveledUp = true;
-    reqExp = getRequiredExp(player.canhGioiIndex);
-  }
-  
-  if (leveledUp) saveData();
-  return leveledUp;
-}
-
-// ------------------- GIAO DIỆN EMBED MENU -------------------
-// 1. EMBED CHÍNH (Giống hình ảnh 1: Menu Tổng Quan Nút Bấm)
-function createMainMenuEmbed(user, player) {
-  return new EmbedBuilder()
-    .setColor('#1e1f22')
-    .setImage('https://i.imgur.com/3Yp7jP4.jpeg')
-    .setDescription(
-      `Cảnh giới: ${getCanhGioiString(player.canhGioiIndex)}\n` +
-      `Giới vực: **${player.gioiVuc}**\n\n` +
-      `**Đạo hiệu: ${player.daoHieu}**\n` +
-      `**Thể Lực:** ${renderProgressBar(player.theLuc, player.maxTheLuc)} \`[${player.theLuc}/${player.maxTheLuc}]\``
-    );
-}
-
-// 2. EMBED CHI TIẾT HỒ SƠ (Giống hình ảnh 2: Bảng Chỉ Số)
-function createProfileEmbed(user, player) {
-  return new EmbedBuilder()
-    .setColor('#1e1f22')
-    .setImage('https://i.imgur.com/3Yp7jP4.jpeg')
-    .setThumbnail(user.displayAvatarURL({ dynamic: true }))
-    .setDescription(
-      `**Đạo hiệu:** **${player.daoHieu}**\n` +
-      `**Giới tính:** **${player.gioiTinh}**\n` +
-      `**Danh hiệu:** **${player.danhHieu}**\n` +
-      `**Giới vực:** **${player.gioiVuc}**\n\n` +
-      `**Cảnh giới:** ${getCanhGioiString(player.canhGioiIndex)}\n` +
-      `**Linh căn:** 🟡 **${player.linhCan}**\n` +
-      `**Thể Chất:** **${player.theChat}**\n` +
-      `**Tông môn:** *${player.tongMon}*\n` +
-      `**Tiên lực:** **${player.tienLuc.toLocaleString()}**\n` +
-      `───────────────────────────────\n` +
-      `📜 **Thể Lực:** ${renderProgressBar(player.theLuc, player.maxTheLuc)} \`[${player.theLuc}/${player.maxTheLuc}]\`\n` +
-      `❤️ **Sinh Mệnh:** **${player.sinhMenh} /${player.maxSinhMenh}**\n` +
-      `🔮 **Linh Lực:** **${player.linhLuc}/${player.maxLinhLuc}**\n` +
-      `🏹 **Công Kích:** **${player.congKich}**\n` +
-      `🛡️ **Phòng Ngự:** **${player.phongNgu}**\n` +
-      `🪽 **Tốc Độ:** **${player.tocDo}**\n` +
-      `💥 **Bạo Kích:** **${player.baoKich}**\n` +
-      `🏃 **Né Tránh:** **${player.neTranh}**`
-    );
-}
-
-// 3. EMBED LÊN CẤP THÔNG BÁO (KÈM GIF LỚN)
-function createLevelUpEmbed(user, player) {
-  return new EmbedBuilder()
-    .setColor('#FFD700')
-    .setTitle('⚡ TỰ ĐỘNG ĐỘT PHÁ CẢNH GIỚI! ⚡')
-    .setDescription(
-      `Chúc mừng <@${user.id}> đột phá lên ${getCanhGioiString(player.canhGioiIndex)}!\n` +
-      `⚔️ **Tiên lực hiện tại:** **${player.tienLuc.toLocaleString()} CP**`
-    )
-    .setImage(getRandom(LEVELUP_GIFS))
-    .setFooter({ text: 'Uyên Sư Muội Tu Tiên' });
-}
-
-// ------------------- TẠO CÁC NÚT BẤM MENU GIỐNG HỆT ẢNH -------------------
-function createMenuActionRows() {
-  // Nhóm Thông Tin
-  const rowInfo = new ActionRowBuilder().addComponents(
-    new ButtonBuilder().setCustomId('btn_hoso').setLabel('👤 Hồ Sơ').setStyle(ButtonStyle.Primary),
-    new ButtonBuilder().setCustomId('btn_dongphu').setLabel('🏰 Động Phủ').setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId('btn_tongmon').setLabel('🏛️ Tông Môn').setStyle(ButtonStyle.Secondary)
-  );
-
-  const rowInfo2 = new ActionRowBuilder().addComponents(
-    new ButtonBuilder().setCustomId('btn_huongdan').setLabel('📖 Hướng Dẫn').setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId('btn_tienbang').setLabel('🏅 Tiên Bảng').setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId('btn_tiencu').setLabel('✨ Tiên Cư').setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId('btn_hethong').setLabel('⚙️ Hệ Thống').setStyle(ButtonStyle.Secondary)
-  );
-
-  // Nhóm Tu Luyện
-  const rowTuLuyen = new ActionRowBuilder().addComponents(
-    new ButtonBuilder().setCustomId('btn_lichluyen').setLabel('🧭 Lịch Luyện').setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId('btn_hoatdong').setLabel('🎯 Hoạt Động').setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId('btn_bicanh').setLabel('🔮 Bí Cảnh').setStyle(ButtonStyle.Primary)
-  );
-
-  const rowTuLuyen2 = new ActionRowBuilder().addComponents(
-    new ButtonBuilder().setCustomId('btn_nhiemvu').setLabel('📜 Nhiệm Vụ').setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId('btn_chetao').setLabel('⚒️ Chế Tạo').setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId('btn_ngoaivuc').setLabel('🌌 Ngoại Vực').setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId('btn_vandinh').setLabel('⚔️ Vấn Đỉnh').setStyle(ButtonStyle.Secondary)
-  );
-
-  // Nhóm Tài Sản
-  const rowTaiSan = new ActionRowBuilder().addComponents(
-    new ButtonBuilder().setCustomId('btn_hanhtrang').setLabel('🎒 Hành Trang').setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId('btn_vanbaolau').setLabel('🏛️ Vạn Bảo Lầu').setStyle(ButtonStyle.Secondary)
-  );
-
-  return [rowInfo, rowInfo2, rowTuLuyen, rowTuLuyen2, rowTaiSan];
-}
-
-// ------------------- SLASH COMMANDS DEFINITION -------------------
-const commands = [
-  new SlashCommandBuilder().setName('tutien').setDescription('Mở Bảng Tu Tiên'),
-  new SlashCommandBuilder().setName('bangxephang').setDescription('Xem Bảng Xếp Hạng Tu Sĩ'),
-  new SlashCommandBuilder().setName('admin_addexp').setDescription('[Admin] Cộng EXP/Tu vi cho người chơi')
-    .addUserOption(o => o.setName('target').setDescription('Tu sĩ').setRequired(true))
-    .addIntegerOption(o => o.setName('amount').setDescription('Số EXP').setRequired(true))
-];
-
-async function registerCommands() {
-  if (!TOKEN || !CLIENT_ID) return;
-  const rest = new REST({ version: '10' }).setToken(TOKEN);
-  try {
-    await rest.put(Routes.applicationCommands(CLIENT_ID), { body: commands });
-    console.log('✅ Đã đăng ký lại Slash Commands chuẩn!');
-  } catch (err) {
-    console.error('❌ Lỗi đăng ký Slash Commands:', err);
-  }
-}
-
-// ------------------- EVENTS -------------------
-client.on('ready', () => {
-  console.log(`🤖 Bot Uyên Sư Muội [${client.user.tag}] đã sẵn sàng!`);
-  registerCommands();
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+  ],
 });
 
-client.on('interactionCreate', async interaction => {
-  try {
-    if (interaction.isChatInputCommand()) {
-      const { commandName, user, options, member } = interaction;
-      const player = getPlayerData(user.id, user.username);
+// TOKEN BOT DISCORD CỦA BẠN
+const TOKEN = 'YOUR_BOT_TOKEN_HERE';
 
-      if (commandName === 'tutien') {
-        const embed = createMainMenuEmbed(user, player);
-        await interaction.reply({ embeds: [embed], components: createMenuActionRows() });
-      }
+// Lưu trữ trạng thái bàn chơi theo Channel ID
+const games = new Map();
 
-      else if (commandName === 'bangxephang') {
-        await interaction.deferReply();
+// --- BỘ BÀI & TIỆN ÍCH ---
+const SUITS = ['♠️', '♥️', '♦️', '♣️'];
+const VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 
-        const entries = Object.entries(db);
-        if (entries.length === 0) {
-          return interaction.editReply({ content: '📊 Chưa có dữ liệu tu sĩ nào!' });
-        }
+function createDeck() {
+  const deck = [];
+  for (const suit of SUITS) {
+    for (const value of VALUES) {
+      deck.push({ suit, value });
+    }
+  }
+  return deck.sort(() => Math.random() - 0.5);
+}
 
-        const sorted = entries
-          .map(([id, p]) => ({ id, ...p }))
-          .sort((a, b) => (b.canhGioiIndex || 0) - (a.canhGioiIndex || 0) || (b.tienLuc || 0) - (a.tienLuc || 0))
-          .slice(0, 10);
+function calculateHand(hand) {
+  let total = 0;
+  let aces = 0;
 
-        let listText = '';
-        for (let i = 0; i < sorted.length; i++) {
-          const p = sorted[i];
-          const rankIcon = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `\`#${i + 1}\``;
-          listText += `${rankIcon} **${p.daoHieu || 'Tu Sĩ Ẩn Danh'}** • ${getCanhGioiString(p.canhGioiIndex || 0)} (Tiên lực: **${(p.tienLuc || 0).toLocaleString()}**)\n`;
-        }
+  for (const card of hand) {
+    if (['J', 'Q', 'K'].includes(card.value)) {
+      total += 10;
+    } else if (card.value === 'A') {
+      aces += 1;
+    } else {
+      total += parseInt(card.value);
+    }
+  }
 
-        const bxhEmbed = new EmbedBuilder()
-          .setColor('#FFD700')
-          .setTitle('🏆 BẢNG XẾP HẠNG PHONG THẦN BẢNG')
-          .setDescription(listText)
-          .setFooter({ text: 'Uyên Sư Muội Tu Tiên' });
+  // TÍNH ĐIỂM XÌ LÁT VIỆT NAM CHO LÁ ÁCH (A)
+  if (hand.length === 2 && aces === 2) return { score: 22, type: 'XI_BAN' };
+  if (hand.length === 2 && aces === 1 && total === 10) return { score: 21, type: 'XI_DACH' };
 
-        await interaction.editReply({ embeds: [bxhEmbed] });
-      }
+  // Bài >= 3 lá: A linh hoạt 10, 11 hoặc 1 điểm tùy tổng
+  for (let i = 0; i < aces; i++) {
+    if (total + 11 <= 21 && (total + 11 + (aces - 1 - i)) <= 21) {
+      total += 11;
+    } else if (total + 10 <= 21 && (total + 10 + (aces - 1 - i)) <= 21) {
+      total += 10;
+    } else {
+      total += 1;
+    }
+  }
 
-      else if (commandName === 'admin_addexp') {
-        const isAdmin = member && member.permissions && member.permissions.has(PermissionFlagsBits.Administrator);
-        if (!isAdmin) {
-          return interaction.reply({ content: '❌ Bạn không có quyền sử dụng lệnh tối thượng này!', ephemeral: true });
-        }
+  if (hand.length === 5 && total <= 21) return { score: total, type: 'NGU_LINH' };
+  if (total > 21) return { score: total, type: 'QUAC' };
+  return { score: total, type: 'NORMAL' };
+}
 
-        const targetUser = options.getUser('target');
-        const amount = options.getInteger('amount');
-        const targetPlayer = getPlayerData(targetUser.id, targetUser.username);
+function formatHand(hand, hideFirst = false) {
+  if (hideFirst) {
+    return `🎴 ${hand.slice(1).map(c => `[${c.value}${c.suit}]`).join(' ')}`;
+  }
+  return hand.map(c => `[${c.value}${c.suit}]`).join(' ');
+}
 
-        targetPlayer.tuVi += amount;
-        const didLevelUp = checkAndAutoLevelUp(targetPlayer);
+// --- XỬ LÝ GAME ---
+client.on('messageCreate', async (message) => {
+  if (message.author.bot) return;
 
-        if (didLevelUp) {
-          const levelEmbed = createLevelUpEmbed(targetUser, targetPlayer);
-          await interaction.reply({ content: `✅ Đã cộng **${amount} EXP** cho **${targetPlayer.daoHieu}**!`, embeds: [levelEmbed] });
-        } else {
-          await interaction.reply({ content: `✅ Đã cộng **${amount} EXP** cho **${targetPlayer.daoHieu}**!` });
-        }
-      }
+  if (message.content === '!xilat' || message.content === '!xilatchoi') {
+    if (games.has(message.channel.id)) {
+      return message.reply('⚠️ Đang có bàn chơi dang dở ở kênh này!');
     }
 
-    else if (interaction.isButton()) {
-      const { customId, user } = interaction;
-      const player = getPlayerData(user.id, user.username);
+    const game = {
+      host: message.author, // Người mở bàn làm Nhà Cái
+      players: [{ user: message.author, hand: [], status: 'PLAYING', isDealer: true }],
+      deck: createDeck(),
+      state: 'WAITING', // WAITING, PLAYING, ENDED
+      currentIndex: 1, // Bắt đầu lượt từ nhà con đầu tiên
+    };
 
-      if (customId === 'btn_hoso') {
-        const embed = createProfileEmbed(user, player);
-        const backRow = new ActionRowBuilder().addComponents(
-          new ButtonBuilder().setCustomId('btn_quaylai').setLabel('🏠 Quay Lại').setStyle(ButtonStyle.Danger)
-        );
-        await interaction.update({ embeds: [embed], components: [backRow] });
-      }
+    games.set(message.channel.id, game);
 
-      else if (customId === 'btn_quaylai') {
-        const embed = createMainMenuEmbed(user, player);
-        await interaction.update({ embeds: [embed], components: createMenuActionRows() });
-      }
+    const embed = new EmbedBuilder()
+      .setTitle('🎲 BÀN CHƠI XÌ LÁT MULTIPLAYER (TỐI ĐA 11 NGƯỜI)')
+      .setDescription(`👑 **Nhà Cái:** ${message.author}\n\nNhấn **Tham Gia** để chơi (Tối đa 10 nhà con).\nNhà cái nhấn **Bắt Đầu** khi đã đủ người!`)
+      .setColor('#2b2d31');
 
-      else if (customId === 'btn_lichluyen') {
-        if (player.theLuc < 10) {
-          return interaction.reply({ content: '❌ Thể lực không đủ (Cần 10 thể lực)!', ephemeral: true });
-        }
+    const row = new ActionRowBuilder().addComponents(
+      new ButtonBuilder().setCustomId('join_game').setLabel('Tham Gia').setStyle(ButtonStyle.Success),
+      new ButtonBuilder().setCustomId('start_game').setLabel('Bắt Đầu Game').setStyle(ButtonStyle.Primary),
+      new ButtonBuilder().setCustomId('cancel_game').setLabel('Hủy Bàn').setStyle(ButtonStyle.Danger)
+    );
 
-        player.theLuc -= 10;
-        player.tuVi += 250;
-
-        const didLevelUp = checkAndAutoLevelUp(player);
-
-        if (didLevelUp) {
-          const levelEmbed = createLevelUpEmbed(user, player);
-          await interaction.reply({ embeds: [levelEmbed] });
-        } else {
-          saveData();
-          await interaction.reply({ content: `🧘 **${player.daoHieu}** hoàn thành lịch luyện, tốn 10 Thể Lực. Nhận **+250 EXP**!`, ephemeral: true });
-        }
-      }
-
-      else {
-        // Phản hồi mặc định cho tất cả các nút chưa gán sự kiện phụ
-        await interaction.reply({ content: `✨ Tính năng **${customId.replace('btn_', '').toUpperCase()}** đang được Uyên Sư Muội cập nhật!`, ephemeral: true });
-      }
-    }
-  } catch (error) {
-    console.error('❌ Lỗi tương tác:', error);
-    if (!interaction.replied && !interaction.deferred) {
-      await interaction.reply({ content: '❌ Đã xảy ra lỗi hệ thống, vui lòng thử lại!', ephemeral: true }).catch(() => {});
-    }
+    await message.channel.send({ embeds: [embed], components: [row] });
   }
 });
 
-if (TOKEN) {
-  client.login(TOKEN).catch(console.error);
+client.on('interactionCreate', async (interaction) => {
+  if (!interaction.isButton()) return;
+
+  const game = games.get(interaction.channelId);
+  if (!game) {
+    return interaction.reply({ content: '❌ Bàn chơi đã kết thúc hoặc không tồn tại!', ephemeral: true });
+  }
+
+  const { customId, user } = interaction;
+
+  // 1. THAM GIA BÀN
+  if (customId === 'join_game') {
+    if (game.state !== 'WAITING') return interaction.reply({ content: 'Game đã bắt đầu!', ephemeral: true });
+    if (game.players.some(p => p.user.id === user.id)) return interaction.reply({ content: 'Bạn đã ở trong bàn!', ephemeral: true });
+    if (game.players.length >= 11) return interaction.reply({ content: 'Bàn đã đầy (1 Cái + 10 Con)!', ephemeral: true });
+
+    game.players.push({ user, hand: [], status: 'PLAYING', isDealer: false });
+    return interaction.reply({ content: `✅ **${user.username}** đã tham gia bàn! (${game.players.length}/11)`, ephemeral: false });
+  }
+
+  // 2. HỦY BÀN
+  if (customId === 'cancel_game') {
+    if (user.id !== game.host.id) return interaction.reply({ content: 'Chỉ Nhà Cái mới có quyền hủy bàn!', ephemeral: true });
+    games.delete(interaction.channelId);
+    return interaction.update({ content: '❌ Bàn chơi đã bị hủy.', embeds: [], components: [] });
+  }
+
+  // 3. BẮT ĐẦU GAME
+  if (customId === 'start_game') {
+    if (user.id !== game.host.id) return interaction.reply({ content: 'Chỉ Nhà Cái mới có thể bắt đầu!', ephemeral: true });
+    if (game.players.length < 2) return interaction.reply({ content: 'Cần ít nhất 2 người (1 Cái + 1 Con) để bắt đầu!', ephemeral: true });
+
+    game.state = 'PLAYING';
+
+    // Chia 2 lá đầu tiên
+    for (let i = 0; i < 2; i++) {
+      for (const p of game.players) {
+        p.hand.push(game.deck.pop());
+      }
+    }
+
+    // Kiểm tra Xì Bàn / Xì Dách sớm
+    updateGameUI(interaction, game, `🎲 **Game bắt đầu!**\nĐang tới lượt của: ${game.players[game.currentIndex].user}`);
+  }
+
+  // 4. RÚT BÀI (HIT)
+  if (customId === 'hit') {
+    const currentPlayer = game.players[game.currentIndex];
+    if (user.id !== currentPlayer.user.id) return interaction.reply({ content: 'Chưa tới lượt của bạn!', ephemeral: true });
+
+    currentPlayer.hand.push(game.deck.pop());
+    const handInfo = calculateHand(currentPlayer.hand);
+
+    if (handInfo.type === 'QUAC' || currentPlayer.hand.length === 5) {
+      // Tự động dằn/dừng nếu quắc hoặc đủ 5 lá (Ngũ linh)
+      nextTurn(interaction, game);
+    } else {
+      updateGameUI(interaction, game, `🃏 ${user} vừa rút thêm 1 lá.`);
+    }
+  }
+
+  // 5. DẰN BÀI (STAND)
+  if (customId === 'stand') {
+    const currentPlayer = game.players[game.currentIndex];
+    if (user.id !== currentPlayer.user.id) return interaction.reply({ content: 'Chưa tới lượt của bạn!', ephemeral: true });
+
+    const handInfo = calculateHand(currentPlayer.hand);
+    if (!currentPlayer.isDealer && handInfo.score < 16 && handInfo.type === 'NORMAL') {
+      return interaction.reply({ content: '⚠️ Bài dưới 16 điểm chưa đủ tuổi dằn!', ephemeral: true });
+    }
+    if (currentPlayer.isDealer && handInfo.score < 15 && handInfo.type === 'NORMAL') {
+      return interaction.reply({ content: '⚠️ Nhà Cái phải từ 15 điểm trở lên mới được dằn!', ephemeral: true });
+    }
+
+    nextTurn(interaction, game);
+  }
+});
+
+function nextTurn(interaction, game) {
+  game.currentIndex++;
+
+  // Nếu đã qua lượt người cuối cùng -> Kết thúc game & So điểm
+  if (game.currentIndex >= game.players.length) {
+    endGame(interaction, game);
+  } else {
+    const nextPlayer = game.players[game.currentIndex];
+    const msg = nextPlayer.isDealer 
+      ? `👑 **Đã tới lượt Nhà Cái (${nextPlayer.user}) rút/dằn bài!**` 
+      : `👉 Tới lượt của nhà con: ${nextPlayer.user}`;
+    updateGameUI(interaction, game, msg);
+  }
 }
+
+async function updateGameUI(interaction, game, statusMessage) {
+  const embed = new EmbedBuilder()
+    .setTitle('🎴 BÀN XÌ LÁT - ĐANG CHƠI')
+    .setColor('#0099ff')
+    .setDescription(statusMessage);
+
+  const dealer = game.players[0];
+  const dealerInfo = calculateHand(dealer.hand);
+  
+  // Ẩn 1 lá của Nhà Cái khi các nhà con đang chơi
+  const isDealerTurn = game.currentIndex === 0;
+  embed.addFields({
+    name: `👑 Nhà Cái: ${dealer.user.username}`,
+    value: isDealerTurn ? `Bài: ${formatHand(dealer.hand)} (${dealerInfo.score}đ)` : `Bài: ${formatHand(dealer.hand, true)}`,
+  });
+
+  // Hiển thị các nhà con
+  for (let i = 1; i < game.players.length; i++) {
+    const p = game.players[i];
+    const info = calculateHand(p.hand);
+    const isCurrent = game.currentIndex === i;
+    
+    let tag = isCurrent ? '➡️ ' : '';
+    let statusText = `Bài: ${formatHand(p.hand)} | Điểm: ${info.score}`;
+    if (info.type === 'XI_BAN') statusText = `Bài: ${formatHand(p.hand)} | 🔥 **XÌ BÀN**`;
+    if (info.type === 'XI_DACH') statusText = `Bài: ${formatHand(p.hand)} | ✨ **XÌ DÁCH**`;
+    if (info.type === 'QUAC') statusText = `Bài: ${formatHand(p.hand)} | 💥 **QUẮC (${info.score}đ)**`;
+
+    embed.addFields({
+      name: `${tag}Nhà con ${i}: ${p.user.username}`,
+      value: statusText,
+      inline: false
+    });
+  }
+
+  const row = new ActionRowBuilder().addComponents(
+    new ButtonBuilder().setCustomId('hit').setLabel('Rút Bài').setStyle(ButtonStyle.Primary),
+    new ButtonBuilder().setCustomId('stand').setLabel('Dằn Bài').setStyle(ButtonStyle.Secondary)
+  );
+
+  if (interaction.replied || interaction.deferred) {
+    await interaction.editReply({ embeds: [embed], components: [row] });
+  } else {
+    await interaction.update({ embeds: [embed], components: [row] });
+  }
+}
+
+async function endGame(interaction, game) {
+  const dealer = game.players[0];
+  const dealerInfo = calculateHand(dealer.hand);
+
+  const embed = new EmbedBuilder()
+    .setTitle('🏆 KẾT QUẢ VÁN XÌ LÁT')
+    .setColor('#00ff00')
+    .addFields({
+      name: `👑 Nhà Cái: ${dealer.user.username}`,
+      value: `Bài: ${formatHand(dealer.hand)} | Điểm: ${dealerInfo.score} (${dealerInfo.type})`
+    });
+
+  // So sánh bài từng Nhà Con với Nhà Cái
+  for (let i = 1; i < game.players.length; i++) {
+    const p = game.players[i];
+    const pInfo = calculateHand(p.hand);
+    let result = '';
+
+    // Logic xét thắng/thua luật Xì Lát VN
+    if (pInfo.type === 'XI_BAN' && dealerInfo.type !== 'XI_BAN') result = '🎉 **THẮNG** (Xì Bàn)';
+    else if (dealerInfo.type === 'XI_BAN' && pInfo.type !== 'XI_BAN') result = '❌ **THUA** (Cái Xì Bàn)';
+    else if (pInfo.type === 'XI_DACH' && dealerInfo.type !== 'XI_DACH') result = '🎉 **THẮNG** (Xì Dách)';
+    else if (dealerInfo.type === 'XI_DACH' && pInfo.type !== 'XI_DACH') result = '❌ **THUA** (Cái Xì Dách)';
+    else if (pInfo.type === 'NGU_LINH' && dealerInfo.type !== 'NGU_LINH') result = '🎉 **THẮNG** (Ngũ Linh)';
+    else if (dealerInfo.type === 'NGU_LINH') result = '❌ **THUA** (Cái Ngũ Linh)';
+    else if (pInfo.type === 'QUAC' && dealerInfo.type === 'QUAC') result = '🤝 **HÒA** (Cùng Quắc)';
+    else if (pInfo.type === 'QUAC') result = '❌ **THUA** (Quắc)';
+    else
